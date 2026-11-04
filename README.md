@@ -23,7 +23,7 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
 
 ---
 
-## 1b. Tài khoản quản trị và danh mục file
+## 2. Tài khoản quản trị và danh mục file
 
 **Đăng nhập thiết bị** (router và cả hai switch dùng chung, đặt `login local` trên console và VTY):
 
@@ -49,7 +49,7 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
 
 ---
 
-## 2. Sơ đồ mạng & Danh mục thiết bị
+## 3. Sơ đồ mạng & Danh mục thiết bị
 
 ![Sơ đồ mạng tổng thể](minh_chung/09_SoDo_TongThe.png)
 
@@ -98,7 +98,7 @@ Tracer tự sinh trong Physical Workspace không phải một thiết bị mạn
 
 ---
 
-## 3. Kế hoạch địa chỉ IP (IPv4 Subnetting)
+## 4. Kế hoạch địa chỉ IP (IPv4 Subnetting)
 
 | Thông số | LAN A (Khu Giáo vụ) | LAN B (Khu Phòng học) |
 |---|---|---|
@@ -117,7 +117,7 @@ Tracer tự sinh trong Physical Workspace không phải một thiết bị mạn
 
 ---
 
-## 4. Dịch vụ mạng & Cấu hình
+## 5. Dịch vụ mạng & Cấu hình
 
 * **DHCP Service:** Cấu hình trên Router `R-MA` với 2 pool `GIAOVU` và `PHONGHOC`, loại trừ các IP tĩnh và gateway.
 * **DNS Service:** Domain Name `portal.minhan.test` trỏ về IP `172.22.10.5`.
@@ -135,7 +135,7 @@ Tracer tự sinh trong Physical Workspace không phải một thiết bị mạn
 
 ---
 
-## 5. Kết quả kiểm thử & Minh chứng
+## 6. Kết quả kiểm thử & Minh chứng
 
 | Thao tác kiểm thử | Mục đích | Minh chứng |
 |---|---|:---:|
@@ -154,7 +154,7 @@ và các phép thử còn cần chụp bổ sung — nằm trong [`BANG_KIEM_THU
 
 ---
 
-## 6. Phần mở rộng tự chọn: ACL
+## 7. Phần mở rộng tự chọn: ACL
 
 Phương án cơ bản cho phép hai LAN liên lạc tự do với nhau — chia subnet chỉ tách miền quảng
 bá, nó không chặn truy cập. Phần mở rộng giải quyết đúng vấn đề đó bằng **ACL mở rộng** đặt
@@ -176,7 +176,7 @@ File mô phỏng: `CSE3030_MinhAn_MoRong_ACL.pkt`.
 
 ---
 
-## 7. Hướng dẫn sử dụng file mô phỏng
+## 8. Hướng dẫn sử dụng file mô phỏng
 
 1. Mở file `CSE3030_MinhAn.pkt` bằng **Cisco Packet Tracer (v9.0 trở lên)**.
 2. Đợi 10 - 20 giây (hoặc bấm nút **Fast Forward Time**) để quá trình hội tụ Spanning-Tree, kết nối Wi-Fi và xin cấp phát DHCP hoàn tất (tất cả các đèn chuyển sang màu xanh lá).
@@ -196,7 +196,7 @@ và bảng xử lý sự cố: [`HUONG_DAN_SU_DUNG_VA_DEMO.md`](HUONG_DAN_SU_DUN
 
 ---
 
-## 8. Còn lại trước khi nộp
+## 9. Còn lại trước khi nộp
 
 - [ ] Điền mã lớp, số nhóm, tên thành viên và **bảng phân công công việc**.
 - [ ] Đổi tên file `.pkt` theo quy ước của lớp, ví dụ `CSE3030_1_Nhom01_MinhAn.pkt`
