@@ -39,6 +39,7 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
 |---|---|
 | `CSE3030_MinhAn.pkt` | **Phương án cơ bản** — nộp bài chính |
 | `CSE3030_MinhAn_MoRong_ACL.pkt` | **Phần mở rộng** — ACL + port-security |
+| [`HUONG_DAN_NHANH.md`](HUONG_DAN_NHANH.md) | **Bắt đầu từ đây** — hướng dẫn từng bước dạng Feature / Bước, dễ làm theo |
 | [`HUONG_DAN_SU_DUNG_VA_DEMO.md`](HUONG_DAN_SU_DUNG_VA_DEMO.md) | Hướng dẫn mở file và **kịch bản demo 8 bước** |
 | [`BANG_KIEM_THU.md`](BANG_KIEM_THU.md) | Bảng kiểm thử đầy đủ theo mẫu của đề bài |
 | [`MO_RONG_ACL.md`](MO_RONG_ACL.md) | Thiết kế, giải thích và kiểm thử phần mở rộng |
