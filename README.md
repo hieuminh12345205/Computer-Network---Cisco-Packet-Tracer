@@ -1,2 +1,2 @@
-# Computer Network Cisco Packet Tracer
-Dự án giữa kỳ mạng máy tính và truyền thông
+# Computer Network Cisco - Packet Tracer
+Dự án giữa kỳ học phần CSE3030: Mạng máy tính và truyền thông
