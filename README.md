@@ -2,6 +2,7 @@
 
 [![Packet Tracer](https://img.shields.io/badge/Cisco%20Packet%20Tracer-v9.0.1-005073?logo=cisco&logoColor=white)](https://www.netacad.com/courses/packet-tracer)
 [![Status](https://img.shields.io/badge/Status-Completed-success)]()
+[![Mo rong](https://img.shields.io/badge/M%E1%BB%9F%20r%E1%BB%99ng-ACL%20%2B%20Port--Security-orange)]()
 
 Dự án thiết kế và mô phỏng hệ thống mạng cho **Trung tâm Đào tạo Minh An** trên Cisco Packet Tracer.
 
@@ -19,6 +20,31 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
 * Máy chủ nội bộ `SRV-PORTAL` cung cấp dịch vụ phân giải tên miền (DNS) và cổng thông tin Web (HTTP) tại địa chỉ `http://portal.minhan.test`.
 * Mạng không dây Wi-Fi bảo mật chuẩn WPA2-PSK/AES cho Giảng viên.
 * Máy in mạng dùng chung có địa chỉ IP tĩnh đặt tại khu Giáo vụ, toàn bộ học viên và giảng viên từ LAN B đều có thể liên lạc.
+
+---
+
+## 1b. Tài khoản quản trị và danh mục file
+
+**Đăng nhập thiết bị** (router và cả hai switch dùng chung, đặt `login local` trên console và VTY):
+
+| Mục | Giá trị |
+|---|---|
+| Username | `admin` |
+| Password | `MinhAn@Admin26` |
+| Enable secret | `MinhAn@Enable26` |
+
+> Đây là mật khẩu thử nghiệm của bài tập. Mở tab **CLI** của router/switch sẽ phải đăng nhập trước.
+
+| File | Nội dung |
+|---|---|
+| `CSE3030_MinhAn.pkt` | **Phương án cơ bản** — nộp bài chính |
+| `CSE3030_MinhAn_MoRong_ACL.pkt` | **Phần mở rộng** — ACL + port-security |
+| [`HUONG_DAN_SU_DUNG_VA_DEMO.md`](HUONG_DAN_SU_DUNG_VA_DEMO.md) | Hướng dẫn mở file và **kịch bản demo 8 bước** |
+| [`BANG_KIEM_THU.md`](BANG_KIEM_THU.md) | Bảng kiểm thử đầy đủ theo mẫu của đề bài |
+| [`MO_RONG_ACL.md`](MO_RONG_ACL.md) | Thiết kế, giải thích và kiểm thử phần mở rộng |
+| [`THIET_KE_VA_HUONG_DAN.md`](THIET_KE_VA_HUONG_DAN.md) | Thuyết minh thiết kế chi tiết |
+| `R-MA.txt`, `SW-*.txt` | Cấu hình IOS xuất từ bản mô phỏng |
+| `tools/` | Công cụ đọc/sửa file `.pkt` (không thuộc sản phẩm nộp) |
 
 ---
 
@@ -51,6 +77,10 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
 | **Printer-PT** | 1 | `PRN-GIAOVU`: Máy in mạng dùng chung (`172.22.10.6`) |
 | **AccessPoint-PT** | 1 | `AP-GIANGVIEN`: Điểm truy cập Wi-Fi nối vào LAN B |
 | **Laptop-PT** | 2 | `LT-GV1`, `LT-GV2`: Laptop giảng viên (card WPC300N) |
+
+Tổng cộng **14 thiết bị** trên Logical Workspace (1 router + 2 switch + 6 PC + 1 server +
+1 máy in + 1 access point + 2 laptop). Thành phần *Power Distribution Device* do Packet
+Tracer tự sinh trong Physical Workspace không phải một thiết bị mạng và không được tính.
 
 ### Bảng kết nối cổng cáp
 
@@ -95,10 +125,12 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
   * SSID: `MINHAN-TEACHER`
   * Bảo mật: `WPA2-PSK` (AES)
   * Mật khẩu: `MinhAnLab2026!`
+* **Bảo vệ truy cập thiết bị:** `enable secret` và tài khoản `admin` (privilege 15) dạng băm Cisco type 5, `service password-encryption`, `login local` trên console và VTY, kèm banner cảnh báo.
 * **Cấu hình Cisco IOS:** Toàn bộ lệnh chi tiết được lưu trong các file:
   * [R-MA.txt](R-MA.txt): Cấu hình Router (Interfaces, DHCP Pools, Services)
   * [SW-GIAOVU.txt](SW-GIAOVU.txt): Cấu hình Switch Giáo vụ
   * [SW-PHONGHOC.txt](SW-PHONGHOC.txt): Cấu hình Switch Phòng học
+  * [R-MA_MoRong_ACL.txt](R-MA_MoRong_ACL.txt), [SW-PHONGHOC_MoRong_PortSecurity.txt](SW-PHONGHOC_MoRong_PortSecurity.txt): Cấu hình của bản mở rộng
 
 ---
 
@@ -115,9 +147,35 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
 | **Simulation Mode**| Kiểm tra gói tin ICMP di chuyển qua các switch và router | ![Simulation](minh_chung/07_Simulation_ICMP.png) |
 | **Kiểm tra nạp lại** | Mở lại file pkt, kiểm tra dịch vụ duy trì ổn định | ![Load File](minh_chung/08_MoLaiFile_Web_LT1.png) |
 
+Bảng trên là các phép thử **đã có minh chứng ảnh**. Bảng kiểm thử đầy đủ theo đúng mẫu của
+đề bài — gồm cả cột *nguồn, đích, thao tác, kết quả mong đợi, kết quả thực tế, minh chứng*,
+và các phép thử còn cần chụp bổ sung — nằm trong [`BANG_KIEM_THU.md`](BANG_KIEM_THU.md).
+
 ---
 
-## 6. Hướng dẫn sử dụng file mô phỏng
+## 6. Phần mở rộng tự chọn: ACL
+
+Phương án cơ bản cho phép hai LAN liên lạc tự do với nhau — chia subnet chỉ tách miền quảng
+bá, nó không chặn truy cập. Phần mở rộng giải quyết đúng vấn đề đó bằng **ACL mở rộng** đặt
+trên cổng router hướng về khu Phòng học:
+
+| Từ khu Phòng học | Kết quả |
+|---|---|
+| DNS + HTTP tới `SRV-PORTAL` | Cho phép |
+| Mọi giao thức tới máy in `172.22.10.6` | Cho phép |
+| `ping` tới `SRV-PORTAL` | **Chặn** — ACL lọc theo dịch vụ ở tầng 4, không chỉ theo địa chỉ |
+| Truy cập các PC khu Giáo vụ | **Chặn** |
+| Chiều Giáo vụ → Phòng học | Không giới hạn |
+
+Kèm theo là **port-security** trên ba cổng nối PC của `SW-PHONGHOC` (không áp cho cổng nối
+Access Point, vì mọi laptop Wi-Fi đều gửi khung qua cổng đó).
+
+Thiết kế, giải thích từng dòng lệnh và bảng kiểm thử riêng: [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
+File mô phỏng: `CSE3030_MinhAn_MoRong_ACL.pkt`.
+
+---
+
+## 7. Hướng dẫn sử dụng file mô phỏng
 
 1. Mở file `CSE3030_MinhAn.pkt` bằng **Cisco Packet Tracer (v9.0 trở lên)**.
 2. Đợi 10 - 20 giây (hoặc bấm nút **Fast Forward Time**) để quá trình hội tụ Spanning-Tree, kết nối Wi-Fi và xin cấp phát DHCP hoàn tất (tất cả các đèn chuyển sang màu xanh lá).
@@ -130,3 +188,18 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
    ping 172.22.10.6    # Ping máy in
    ping 172.22.10.5    # Ping server
    ```
+5. Mở tab **CLI** của router/switch sẽ phải đăng nhập: `admin` / `MinhAn@Admin26`, sau đó `enable` với `MinhAn@Enable26`.
+
+Hướng dẫn đầy đủ kèm **kịch bản demo 8 bước**, câu trả lời cho các câu hỏi giảng viên hay hỏi
+và bảng xử lý sự cố: [`HUONG_DAN_SU_DUNG_VA_DEMO.md`](HUONG_DAN_SU_DUNG_VA_DEMO.md).
+
+---
+
+## 8. Còn lại trước khi nộp
+
+- [ ] Điền mã lớp, số nhóm, tên thành viên và **bảng phân công công việc**.
+- [ ] Đổi tên file `.pkt` theo quy ước của lớp, ví dụ `CSE3030_1_Nhom01_MinhAn.pkt`
+      (đề bài gợi ý mẫu `CSE3030_1_Nhom01_TenDonVi.pkt`; hiện chưa đổi vì chưa có mã lớp và số nhóm).
+- [ ] Chụp bổ sung các phép thử còn trống trong [`BANG_KIEM_THU.md`](BANG_KIEM_THU.md)
+      và bảng E1–E8 của [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
+- [ ] Xác nhận phiên bản Packet Tracer giảng viên dùng (bản này lưu bằng 9.0.1.0858).

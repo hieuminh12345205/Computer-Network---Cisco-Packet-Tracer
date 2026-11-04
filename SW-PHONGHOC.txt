@@ -2,9 +2,13 @@
 version 12.2
 no service timestamps log datetime msec
 no service timestamps debug datetime msec
-no service password-encryption
+service password-encryption
 !
 hostname SW-PHONGHOC
+!
+enable secret 5 $1$mnA1$UXzU6cjyU9rOmQwN2qKca1
+!
+username admin privilege 15 secret 5 $1$mnA2$Rw0ja0H.suN8U67nH96dF/
 !
 !
 !
@@ -112,12 +116,15 @@ ip default-gateway 172.22.20.1
 !
 !
 !
+banner motd ^C Canh bao: Thiet bi mang Trung tam Dao tao Minh An. Chi nhan su duoc uy quyen moi duoc truy cap. ^C
+!
 line con 0
+ login local
 !
 line vty 0 4
- login
+ login local
 line vty 5 15
- login
+ login local
 !
 !
 !
