@@ -1,0 +1,9 @@
+# Python / temp build files
+work/
+*.pyc
+__pycache__/
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
