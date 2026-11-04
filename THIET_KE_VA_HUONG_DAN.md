@@ -1,6 +1,7 @@
 # Thiết kế mạng trung tâm đào tạo Minh An
 
 **File chính:** `CSE3030_MinhAn.pkt`  
+**File phần mở rộng:** `CSE3030_MinhAn_MoRong_ACL.pkt` (xem [`MO_RONG_ACL.md`](MO_RONG_ACL.md))  
 **Phiên bản đã dùng để mở và kiểm tra:** Cisco Packet Tracer 9.0.1.0858  
 **Ngày thực hiện:** 04/11/2026
 
@@ -10,7 +11,9 @@ Trung tâm Minh An có khoảng 30 người dùng: 8 nhân sự Giáo vụ và 2
 
 Đây là thiết kế mới, với tên đơn vị, sơ đồ bố trí, địa chỉ IP, SSID và nội dung website riêng. File `GK.pkt` chỉ được mở để tham khảo; không được dùng làm dữ liệu đầu vào cho mã dựng mô hình.
 
-Mô hình hoàn thành phần cơ bản: hai subnet nối trực tiếp vào một router, DHCP trên router, DNS và HTTP trên server, Wi-Fi WPA2-PSK/AES, máy in IP tĩnh. Phạm vi chưa gồm Internet, NAT, ACL, dự phòng hay định tuyến động. Việc chia subnet tạo hai miền quảng bá; bản thân nó không chặn truy cập giữa hai khu.
+Mô hình hoàn thành phần cơ bản: hai subnet nối trực tiếp vào một router, DHCP trên router, DNS và HTTP trên server, Wi-Fi WPA2-PSK/AES, máy in IP tĩnh. Phạm vi chưa gồm Internet, NAT, dự phòng hay định tuyến động. Việc chia subnet tạo hai miền quảng bá; bản thân nó không chặn truy cập giữa hai khu.
+
+Phần mở rộng tự chọn được làm trên **một file riêng** `CSE3030_MinhAn_MoRong_ACL.pkt`, dùng ACL để giới hạn truy cập từ khu Phòng học sang khu Giáo vụ, kèm port-security trên các cổng nối PC của khu Phòng học. Giữ hai file tách nhau vì phương án cơ bản yêu cầu hai LAN liên lạc được, còn phần mở rộng thì cố tình chặn bớt.
 
 ## 2. Sơ đồ và danh mục thiết bị
 
@@ -76,7 +79,8 @@ Chọn dải private 172.22.x.x để tách biệt với ví dụ của đề. /
 - HTTP bật trên server. Trang chủ được viết riêng cho trung tâm, có lịch học và thông tin dịch vụ dùng chung.
 - Wi-Fi: SSID **MINHAN-TEACHER**, **WPA2-PSK**, **AES**. Khóa thử nghiệm: **MinhAnLab2026!** (có dấu `!` cuối). Hai laptop đã lắp card WPC300N và dùng DHCP.
 - Hai switch dùng VLAN 1 trong phương án cơ bản; mỗi LAN được tách bởi một cổng router. Chưa triển khai VLAN theo phòng ban trên một đường trunk.
-- Các file `R-MA.txt`, `SW-GIAOVU.txt`, `SW-PHONGHOC.txt` chứa cấu hình IOS xuất từ bản mô phỏng đã lưu.
+- Bảo vệ truy cập thiết bị trên cả ba thiết bị IOS: `enable secret` và tài khoản `admin` privilege 15 (lưu dạng băm Cisco type 5), `service password-encryption`, `login local` trên console và VTY, banner cảnh báo. Trước đó cả ba thiết bị đặt `login` trên đường VTY **nhưng không có mật khẩu**, nên mọi phiên telnet đều bị từ chối với thông báo *"Password required, but none set"*. Mật khẩu thử nghiệm: `admin` / `MinhAn@Admin26`, enable secret `MinhAn@Enable26`.
+- Các file `R-MA.txt`, `SW-GIAOVU.txt`, `SW-PHONGHOC.txt` chứa cấu hình IOS xuất từ bản mô phỏng đã lưu; `R-MA_MoRong_ACL.txt` và `SW-PHONGHOC_MoRong_PortSecurity.txt` là cấu hình của bản mở rộng.
 
 ## 5. Kết quả kiểm thử đại diện
 
@@ -95,7 +99,7 @@ Chọn dải private 172.22.x.x để tách biệt với ví dụ của đề. /
 
 Một số Simple PDU đầu tiên đã báo Failed trước khi gửi lại. Các gói gửi lại và phép ping bốn gói đã thành công. Khi mạng vừa khởi động hoặc mới đổi bảo mật Wi-Fi, cần chờ kết nối, DHCP và quá trình ARP hoàn tất rồi thử lại; không kết luận lỗi định tuyến chỉ từ một Simple PDU đầu tiên. Lịch sử thử được giữ để đối chiếu.
 
-Các kết quả trên là phép thử đại diện đã thực hiện, không phải khẳng định đã thử mọi cặp thiết bị. Khi nhóm chuẩn bị báo cáo, bổ sung ping giữa hai PC cùng LAN, ping gateway ở mỗi LAN và kiểm tra IP của đủ 6 PC, 2 laptop.
+Các kết quả trên là phép thử đại diện đã thực hiện, không phải khẳng định đã thử mọi cặp thiết bị. Bảng kiểm thử đầy đủ theo đúng mẫu của đề bài nằm trong [`BANG_KIEM_THU.md`](BANG_KIEM_THU.md): các phép thử còn thiếu (ping giữa hai PC cùng LAN, ping gateway mỗi LAN, IP của đủ 6 PC và 2 laptop, `tracert`, `show ip route`, `show ip dhcp binding`) đã được liệt kê sẵn kèm kết quả mong đợi, đánh dấu *(cần chụp)* để nhóm tự chạy và chụp bổ sung.
 
 ## 6. Cách mở và trình bày
 
@@ -109,8 +113,8 @@ Các kết quả trên là phép thử đại diện đã thực hiện, không 
 
 ## 7. Việc nhóm cần bổ sung trước khi nộp
 
-Điền đúng mã lớp, số nhóm, tên thành viên và phân công thực tế. Đổi tên file theo quy tắc của lớp nếu cần. Xác nhận phiên bản Packet Tracer giảng viên dùng; bản này đã kiểm tra trên 9.0.1, chưa xác nhận mở được trên bản cũ hơn. Đây là phương án cơ bản tại một địa điểm; chưa có kết nối Internet thực hay kiểm thử in tài liệu. Nếu chọn phần mở rộng, nên làm trên một bản sao và ghi riêng phép thử được phép/bị chặn.
+Điền đúng mã lớp, số nhóm, tên thành viên và phân công thực tế. Đổi tên file theo quy tắc của lớp nếu cần. Xác nhận phiên bản Packet Tracer giảng viên dùng; bản này đã kiểm tra trên 9.0.1, chưa xác nhận mở được trên bản cũ hơn. Đây là phương án cơ bản tại một địa điểm; chưa có kết nối Internet thực hay kiểm thử in tài liệu. Phần mở rộng đã được làm trên một bản sao riêng, với bảng phép thử được phép/bị chặn ghi trong [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
 
-Mã dựng ban đầu và dữ liệu tạm nằm trong `work/`, không cần nộp. File `.pkt` cuối đã được cấu hình và lưu lại bằng Packet Tracer; nên dùng trực tiếp file này cho việc học và chỉnh sửa.
+Mã dựng ban đầu và dữ liệu tạm nằm trong `work/`, không cần nộp. Công cụ đọc/sửa trực tiếp file `.pkt` nằm trong `tools/` (xem [`tools/README_tools.md`](tools/README_tools.md)), cũng không thuộc sản phẩm nộp. File `.pkt` cuối đã được cấu hình và lưu lại bằng Packet Tracer; nên dùng trực tiếp file này cho việc học và chỉnh sửa.
 
 Thư viện mã hóa/ghi định dạng được dùng để dựng thiết bị nền: [packet-tracer-pkt-format](https://github.com/aacanadaa/packet-tracer-pkt-format). Nội dung thiết kế, kế hoạch địa chỉ và trang web do bản dự án này xây dựng riêng.
