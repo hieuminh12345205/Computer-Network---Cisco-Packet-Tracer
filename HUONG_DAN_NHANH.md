@@ -192,7 +192,9 @@ ping 172.22.10.1
 ping 172.22.10.5
 ```
 
-✅ **Đúng là khi:** có 4 dòng `Reply from 172.22.10.5`.
+✅ **Đúng là khi:** có dòng `Reply from 172.22.10.5` với **TTL=127** (bị trừ 1 vì đã đi qua router; ping trong cùng khu thì là 128).
+
+> Lần ping **đầu tiên** sau khi mở file thường có 1 dòng `Request timed out` (Lost = 1). Đó là lúc router đang đi hỏi ARP "máy 172.22.10.5 là ai?", nên gói đầu bị bỏ. Gõ lại lệnh ping lần nữa thì phải ra đủ **4/4 Reply, Lost = 0**. Khi chụp minh chứng, chụp lần thứ hai này.
 
 **Bước 3:** Gõ tiếp lệnh này để xem gói tin đi qua những đâu:
 
