@@ -70,6 +70,86 @@ Không cần hiểu hết ngay. Cứ bấm theo, phần giải thích nằm ở 
 
 💡 **Hiểu nhanh:** máy tính không tự đặt IP, mà **xin** router cấp cho. Việc tự xin này gọi là **DHCP**. Khu A và khu B được cấp hai dải số khác nhau, nên nhìn số IP là biết máy thuộc khu nào.
 
+### 📖 Hiểu kỹ hơn về DHCP (đọc khi có thời gian)
+
+**1. Bốn dòng trong IP Configuration nghĩa là gì?**
+
+Router `R-MA` giống **cô lễ tân phát số phòng**. Mỗi máy cần đủ 4 thông tin mới hoạt động được:
+
+| Ô trong IP Configuration | Ví dụ PC-GV1 (khu A) | Ví dụ PC-HV1 (khu B) | Ý nghĩa đời thường |
+|---|---|---|---|
+| **IPv4 Address** | `172.22.10.12` | `172.22.20.10` | **Số nhà** của máy. Không máy nào được trùng. |
+| **Subnet Mask** | `255.255.255.224` | `255.255.255.192` | **Cỡ khu phố**: khu có bao nhiêu số nhà. |
+| **Default Gateway** | `172.22.10.1` | `172.22.20.1` | **Cổng ra khỏi khu**, chính là router. Gửi gì sang khu khác thì đưa cho cổng này. |
+| **DNS Server** | `172.22.10.5` | `172.22.10.5` | **Danh bạ**: đổi tên `portal.minhan.test` thành số `172.22.10.5`. |
+
+Không có DHCP thì phải **gõ tay 4 dòng này cho từng máy**, nhiều máy thì dễ gõ nhầm hoặc trùng. Có DHCP, máy chỉ cần chọn **DHCP** là tự nhận đủ.
+
+**2. Máy "xin" IP như thế nào? 4 bước, gọi tắt là DORA**
+
+Vừa bật lên, máy **chưa có số nhà**, nên nó không biết router ở đâu. Nó phải **hét lên với cả khu** (gọi là *broadcast*):
+
+1. **D – Discover:** Máy: *"Có ai phát IP không? Cho tôi một số với!"*
+2. **O – Offer:** Router: *"Có đây. Bạn lấy số `172.22.10.12` nhé, kèm mask, gateway, DNS."*
+3. **R – Request:** Máy: *"OK, tôi xin lấy số đó."*
+4. **A – Acknowledge:** Router: *"Đồng ý, số đó là của bạn."*
+
+Sau đó máy còn hét thêm câu *"Có ai đang dùng `172.22.10.12` không?"* để chắc là không trùng (gói **ARP** có IP nguồn = IP đích).
+
+👉 **Xem tận mắt:** vào Simulation, **Edit Filters** chỉ để **DHCP**. Mở một PC, vào IP Configuration, bấm **Static** rồi bấm lại **DHCP**. Bạn sẽ thấy 4 phong bì DORA chạy qua lại.
+
+**3. Một router mà phát hai loại số. Sao nó biết máy nào ở khu nào?**
+
+Router có **2 cổng**, mỗi cổng nối với một khu:
+
+```
+              R-MA (router)
+             /            \
+   G0/0 = 172.22.10.1    G0/1 = 172.22.20.1
+          |                      |
+   SW-GIAOVU               SW-PHONGHOC
+   (khu A – Giáo vụ)       (khu B – Phòng học)
+```
+
+Router đặt sẵn **2 "kho số"** (gọi là *DHCP pool*):
+
+- Kho `GIAOVU` (khu A): phát từ `172.22.10.10` tới `.29`
+- Kho `PHONGHOC` (khu B): phát từ `172.22.20.10` tới `.59`
+
+Lời xin của máy **đi vào cổng nào** thì router lấy số ở **kho của cổng đó**:
+
+- PC-GV1 cắm vào SW-GIAOVU, lời xin vào **G0/0**, nên nhận `172.22.10.x`.
+- PC-HV1 cắm vào SW-PHONGHOC, lời xin vào **G0/1**, nên nhận `172.22.20.x`.
+
+👉 Máy không tự chọn khu. **Chỗ cắm dây quyết định khu.**
+
+**4. Nhìn số IP là biết khu nào: xem số thứ 3**
+
+| IP có dạng | Thuộc khu | Mask | Số máy dùng được |
+|---|---|---|---|
+| `172.22.`**`10`**`.x` | Khu A – Giáo vụ (8 người) | `/27` = `255.255.255.224` | 30 |
+| `172.22.`**`20`**`.x` | Khu B – Phòng học (22 người) | `/26` = `255.255.255.192` | 62 |
+
+Hai khu **mask khác nhau** vì cần số lượng máy khác nhau. Chọn khu vừa đủ chỗ (còn dư để mở rộng) thì không lãng phí địa chỉ. Đây là ý **chia mạng con (subnetting)** trong đề.
+
+**5. Vì sao DHCP không phát từ `.1`?**
+
+Các số nhỏ được **giữ lại cho thiết bị cố định**, vì những thiết bị này không được đổi số:
+
+| Số | Dùng cho |
+|---|---|
+| `.1` | Router (cổng ra khỏi khu) |
+| `.2` | Switch (để quản lý từ xa) |
+| `.5` | Server Portal (DNS + Web), chỉ ở khu A |
+| `.6` | Máy in, chỉ ở khu A |
+| `.10` trở lên | **DHCP phát cho PC và laptop** |
+
+Số của máy in mà thay đổi lung tung thì mọi người không in được. Vì vậy server, máy in, router phải có **số cố định**, còn PC thì nhận số nào cũng được. Trên router, việc "giữ lại" này là lệnh `ip dhcp excluded-address`.
+
+**🎤 Câu trả lời mẫu khi thầy hỏi về DHCP:**
+
+> "Các máy để ở chế độ DHCP nên tự xin IP từ router R-MA. Router có 2 pool: pool GIAOVU phát 172.22.10.10–29 cho cổng G0/0, pool PHONGHOC phát 172.22.20.10–59 cho cổng G0/1. Máy cắm ở khu nào thì nhận IP của khu đó, kèm mask, gateway và DNS 172.22.10.5. Các địa chỉ thấp được loại trừ để dành cho router, switch, server và máy in."
+
 ---
 
 ## Feature 3: Kiểm tra hai máy cùng khu nói chuyện được với nhau
@@ -213,6 +293,16 @@ rồi chạy ngược về. Cuối cùng khung bên phải ghi **Successful**.
 **Bước 6:** Xong thì bấm lại về **Realtime**.
 
 **Nếu ghi Failed ở lần đầu:** bình thường. Bấm thêm Fast Forward ở chế độ Realtime, rồi thử lại.
+
+**Thấy phong bì có dấu ❌ đỏ thì sao?** Dấu X nghĩa là **máy đó bỏ gói tin**, thường **không phải lỗi**:
+
+- Phong bì **ARP** (hoặc DHCP) bị X ở nhiều máy cùng lúc: đó là câu hỏi broadcast gửi cho cả khu, máy nào không phải đích thì bỏ. **Bình thường.**
+- Phong bì **ICMP** bị X ở `R-MA` khi đang mở file `..._MoRong_ACL.pkt`: **ACL đang chặn**, đúng thiết kế.
+- Phong bì **ICMP** bị X khi đang mở file gốc, và gửi lại lần 2 vẫn X: lúc này **mới là lỗi**, chụp lại cho cả nhóm xem.
+
+Muốn biết chính xác lý do: bấm vào **ô vuông màu** ở cột Info trong Event List (hoặc bấm trúng hình phong bì, đừng bấm vào máy). Cửa sổ **PDU Information** hiện ra, đọc dòng chữ ở tab **OSI Model**.
+
+**Phong bì màu hồng chạy liên tục là gì?** Đó là gói **STP**: switch tự gửi khoảng 2 giây một lần để kiểm tra mạng không bị vòng lặp dây. Bình thường. Muốn sơ đồ gọn khi demo thì bỏ tích **STP** trong Edit Filters.
 
 ---
 
