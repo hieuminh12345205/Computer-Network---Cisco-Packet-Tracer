@@ -154,15 +154,19 @@ Số của máy in mà thay đổi lung tung thì mọi người không in đư�
 
 ## Feature 3: Kiểm tra hai máy cùng khu nói chuyện được với nhau
 
-**Bước 1:** Làm Feature 2 với `PC-GV2`, ghi lại số IP của nó (ví dụ `172.22.10.12`).
+**Bước 1:** Làm Feature 2 với **cả hai máy** `PC-GV1` và `PC-GV2`, ghi lại IP của từng máy.
+
+> ⚠️ DHCP phát số theo thứ tự máy nào xin trước, nên **mỗi lần mở file số có thể khác**. Ví dụ một lần chạy: PC-GV1 = `172.22.10.12`, PC-GV2 = `172.22.10.10`. Luôn xem số thật, đừng chép số trong tài liệu.
 
 **Bước 2:** Bấm vào `PC-GV1` → tab **Desktop** → **Command Prompt**.
 
-**Bước 3:** Gõ lệnh sau rồi Enter (thay bằng IP bạn vừa ghi):
+**Bước 3:** Gõ `ping` + **IP của PC-GV2** (không phải IP của PC-GV1!) rồi Enter. Ví dụ:
 
 ```
-ping 172.22.10.12
+ping 172.22.10.10
 ```
+
+> ❗ Gõ nhầm IP của chính PC-GV1 thì máy **ping chính nó**, lúc nào cũng thông, nên không chứng minh được gì.
 
 ✅ **Đúng là khi:** hiện 4 dòng `Reply from ...`, dòng cuối ghi **Lost = 0**.
 
