@@ -314,7 +314,9 @@ rồi chạy ngược về. Cuối cùng khung bên phải ghi **Successful**.
 
 **Bước 6:** Xong thì bấm lại về **Realtime**.
 
-**Nếu ghi Failed ở lần đầu:** bình thường. Bấm thêm Fast Forward ở chế độ Realtime, rồi thử lại.
+**Nếu ghi Failed ở lần đầu:** bình thường, nhất là khi vừa mở file. Router phải đi hỏi ARP nên gói đầu bị bỏ. Ở bảng PDU dưới cùng, **bấm đúp vào chấm đỏ ở cột Fire** của dòng đó để gửi lại, rồi bấm ▶ Play. Lần hai phải ra **Successful**.
+
+💡 Khi demo trước thầy: mở file xong, ping vài lệnh ở **Realtime** trước cho mạng "quen nhau", rồi mới chuyển sang Simulation.
 
 **Thấy phong bì có dấu ❌ đỏ thì sao?** Dấu X nghĩa là **máy đó bỏ gói tin**, thường **không phải lỗi**:
 
