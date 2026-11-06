@@ -272,7 +272,19 @@ http://portal.minhan.test
 ping 172.22.10.6
 ```
 
-✅ **Đúng là khi:** có 4 dòng `Reply from 172.22.10.6`.
+✅ **Đúng là khi:** có 4 dòng `Reply from 172.22.10.6`, **TTL=127**.
+
+**Bước 3:** Làm lại lệnh ping đó trên `PC-HV1` (khu B, nối dây) và `PC-GV1` (khu A, cùng khu với máy in).
+
+✅ **Đúng là khi:** cả ba máy đều **4/4 Reply, Lost = 0**:
+
+| Ping từ | TTL thấy được | Vì sao |
+|---|---|---|
+| `PC-GV1` (khu A) | **128** | Cùng khu, không đi qua router |
+| `PC-HV1` (khu B) | **127** | Đi qua `R-MA` một lần, bị trừ 1 |
+| `LT-GV2` (Wi-Fi) | **127** | Cũng ở khu B, đi qua router một lần |
+
+Laptop Wi-Fi có thời gian (`time=`) lớn hơn máy cắm dây, vài chục ms. Bình thường, sóng Wi-Fi chậm hơn dây.
 
 💡 **Hiểu nhanh:** máy in nằm ở khu A nhưng laptop khu B vẫn với tới được → máy in đúng là **dùng chung**. Đề bài chỉ cần ping được máy in, **không cần in thật**.
 
