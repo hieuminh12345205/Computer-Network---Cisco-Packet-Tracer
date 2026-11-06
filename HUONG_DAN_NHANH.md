@@ -238,11 +238,15 @@ http://portal.minhan.test
 
 ## Feature 6: Laptop kết nối Wi-Fi
 
-**Bước 1:** Bấm vào `LT-GV2` → tab **Desktop** → **PC Wireless**.
+**Bước 1:** Bấm vào `LT-GV2` (hoặc `LT-GV1`, cấu hình giống nhau) → tab **Desktop** → biểu tượng **PC Wireless** (hình cột ăng-ten, hàng 2, ô đầu tiên).
 
-**Bước 2:** Xem tab **Link Information**.
+**Bước 2:** Cửa sổ **Linksys** hiện ra, xem tab **Link Information** (thường mở sẵn).
 
-✅ **Đúng là khi:** thấy đang kết nối tới **`MINHAN-TEACHER`**, có vạch sóng.
+✅ **Đúng là khi:** ghi **"You have successfully connected to the access point"**, hai vạch **Signal Strength** và **Link Quality** xanh đầy.
+
+**Bước 2b:** Bấm nút **More Information**.
+
+✅ **Đúng là khi:** dòng **Wireless Network Name (SSID)** là **`MINHAN-TEACHER`**, bảo mật **WPA2**.
 
 **Bước 3:** Quay lại **Desktop** → **IP Configuration**.
 
