@@ -296,7 +296,7 @@ Laptop Wi-Fi có thời gian (`time=`) lớn hơn máy cắm dây, vài chục m
 
 **Bước 2:** Trong khung Simulation, bấm **Edit Filters** → chỉ để tích **ICMP** và **ARP**, bỏ tích hết cái khác.
 
-**Bước 3:** Trên thanh công cụ bên phải, chọn biểu tượng **phong bì kín** (Add Simple PDU).
+**Bước 3:** Trên **thanh công cụ thứ hai ở phía trên** (hàng có mũi tên chọn, kính lúp, dấu X xoá), nhìn sang **cuối hàng bên phải**: có 2 hình phong bì. Bấm vào **phong bì kín** (cái thứ nhất, tên *Add Simple PDU*, phím tắt `P`). Cái thứ hai là phong bì mở (*Add Complex PDU*), không dùng.
 
 **Bước 4:** Bấm vào `PC-GV1`, rồi bấm vào `PC-HV3`.
 
