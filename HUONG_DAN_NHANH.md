@@ -318,6 +318,8 @@ rồi chạy ngược về. Cuối cùng khung bên phải ghi **Successful**.
 
 💡 Khi demo trước thầy: mở file xong, ping vài lệnh ở **Realtime** trước cho mạng "quen nhau", rồi mới chuyển sang Simulation.
 
+⚠️ **Gói ping (PDU) nhớ số IP, không nhớ tên máy.** PDU tạo hôm trước tới một PC dùng DHCP có thể chạy nhầm sang máy khác, vì lần mở file sau IP đã đổi chủ. Vì vậy file chỉ lưu sẵn 2 gói tới IP cố định (server `.5`, máy in `.6`). Gói tới PC thì **mỗi lần demo tạo mới**, và xem Event List để chắc gói tới đúng máy đích.
+
 **Thấy phong bì có dấu ❌ đỏ thì sao?** Dấu X nghĩa là **máy đó bỏ gói tin**, thường **không phải lỗi**:
 
 - Phong bì **ARP** (hoặc DHCP) bị X ở nhiều máy cùng lúc: đó là câu hỏi broadcast gửi cho cả khu, máy nào không phải đích thì bỏ. **Bình thường.**
