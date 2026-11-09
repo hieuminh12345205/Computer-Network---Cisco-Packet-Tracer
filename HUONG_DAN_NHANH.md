@@ -352,7 +352,8 @@ Muốn biết chính xác lý do: bấm vào **ô vuông màu** ở cột Info t
 - `>` là quyền xem thường, `#` là quyền quản trị cao nhất (privilege 15).
 - Tài khoản `admin` được cấu hình `privilege 15`, nên đăng nhập xong là có `#` ngay. Mật khẩu chỉ hỏi **một lần** ở bước đăng nhập.
 - `enable secret` (`MinhAn@Enable26`) vẫn được đặt để dự phòng: tài khoản nào có quyền thấp hơn (dấu `>`) thì phải gõ `enable` + mật khẩu này mới lên được `#`.
-- Có mật khẩu để người lạ không vào sửa cấu hình router được. Hai switch đăng nhập y hệt.
+- Có mật khẩu để người lạ không vào sửa cấu hình router được.
+- **Hai switch** dùng cùng tài khoản, nhưng switch 2960 trong Packet Tracer không giữ `privilege 15` cho tài khoản, nên đăng nhập xong sẽ thấy dấu **`>`** (ví dụ `SW-PHONGHOC>`). Gõ `enable` + `MinhAn@Enable26` để lên `#`. Đây chính là chỗ `enable secret` phát huy tác dụng.
 
 🗣️ **Nếu thầy hỏi "sao enable không hỏi mật khẩu?":** *"Tài khoản admin được gán privilege 15 nên vào thẳng chế độ quản trị; enable secret chỉ áp dụng cho tài khoản quyền thấp."*
 
