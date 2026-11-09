@@ -451,7 +451,7 @@ show access-lists
 
 Vẫn dùng file `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`.
 
-**Bước 1:** Bấm vào switch `SW-PHONGHOC` → tab **CLI** → đăng nhập như Feature 9 (dấu nhắc sẽ là `SW-PHONGHOC#`).
+**Bước 1:** Bấm vào switch `SW-PHONGHOC` → tab **CLI** → Enter → đăng nhập `admin` / `MinhAn@Admin26`. Dấu nhắc là **`SW-PHONGHOC>`**, gõ tiếp `enable` → mật khẩu `MinhAn@Enable26` → thành **`SW-PHONGHOC#`**.
 
 **Bước 2:** Gõ:
 
@@ -463,6 +463,14 @@ show port-security interface fa0/1
 - `Port Security` : **Enabled**
 - `Maximum MAC Addresses` : **1**
 - `Violation Mode` : **Restrict**
+
+**Bước 3:** Gõ:
+
+```
+show port-security address
+```
+
+✅ **Đúng là khi:** có 3 dòng kiểu **SecureSticky** cho `Fa0/1`, `Fa0/2`, `Fa0/3`. Mỗi dòng là MAC của máy đang cắm ở cổng đó (PC-HV1, PC-HV2, PC-HV3). Switch đã "ghi nhớ" máy nào được phép cắm vào cổng nào.
 
 💡 **Hiểu nhanh:** mỗi ổ cắm mạng ở phòng học chỉ cho **một máy** dùng. Ai rút máy ra cắm thiết bị lạ vào thì bị chặn. Riêng ổ cắm của bộ phát Wi-Fi thì **không khoá**, vì nhiều laptop cùng đi qua ổ đó.
 
