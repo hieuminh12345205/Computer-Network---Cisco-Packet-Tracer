@@ -1,6 +1,6 @@
 # Phần mở rộng: ACL giới hạn truy cập giữa hai bộ phận
 
-File: **`CSE3030_MinhAn_MoRong_ACL.pkt`**
+File: **`CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`**
 Cấu hình xuất ra: [`R-MA_MoRong_ACL.txt`](R-MA_MoRong_ACL.txt),
 [`SW-PHONGHOC_MoRong_PortSecurity.txt`](SW-PHONGHOC_MoRong_PortSecurity.txt)
 
@@ -104,7 +104,7 @@ gửi khung qua cổng này, giới hạn một MAC sẽ chặn mất toàn bộ
 
 ## 5. Bảng kiểm thử phần mở rộng
 
-Chạy trên `CSE3030_MinhAn_MoRong_ACL.pkt`, sau khi mạng đã hội tụ.
+Chạy trên `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`, sau khi mạng đã hội tụ.
 
 | # | Nguồn | Đích / thao tác | Kết quả mong đợi | Kết quả thực tế | Minh chứng |
 |---|---|---|---|---|---|

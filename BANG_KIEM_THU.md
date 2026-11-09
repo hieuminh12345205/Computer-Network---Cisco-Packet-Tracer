@@ -13,7 +13,7 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 
 ---
 
-## A. Phương án cơ bản — `CSE3030_MinhAn.pkt`
+## A. Phương án cơ bản — `CSE3030_2_Nhom6_MinhAn.pkt`
 
 ### A1. Cấp phát DHCP
 
@@ -107,7 +107,7 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 
 ---
 
-## B. Phần mở rộng — `CSE3030_MinhAn_MoRong_ACL.pkt`
+## B. Phần mở rộng — `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`
 
 Xem bảng E1–E8 trong [`MO_RONG_ACL.md`](MO_RONG_ACL.md#5-bảng-kiểm-thử-phần-mở-rộng),
 gồm cả trường hợp **được phép** và trường hợp **bị chặn** như đề bài yêu cầu.

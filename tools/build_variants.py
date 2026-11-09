@@ -2,8 +2,8 @@
 """
 Dung hai ban mo phong tu file goc, bang cach sua truc tiep cau hinh IOS ben trong .pkt.
 
-  1. CSE3030_MinhAn.pkt            - phuong an co ban + va lo hong bao mat thiet bi
-  2. CSE3030_MinhAn_MoRong_ACL.pkt - phuong an co ban + phan mo rong (ACL, port-security)
+  1. CSE3030_2_Nhom6_MinhAn.pkt            - phuong an co ban + va lo hong bao mat thiet bi
+  2. CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt - phuong an co ban + phan mo rong (ACL, port-security)
 
 Vi sao sua thang vao .pkt chu khong chi sua file .txt: neu chi sua ban xuat .txt thi
 cau hinh trong tai lieu se khac cau hinh thuc te trong mo phong. Yeu cau cua de bai la
@@ -27,8 +27,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pkt_codec  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_PKT = os.path.join(ROOT, "CSE3030_MinhAn.pkt")
-EXT_PKT = os.path.join(ROOT, "CSE3030_MinhAn_MoRong_ACL.pkt")
+BASE_PKT = os.path.join(ROOT, "CSE3030_2_Nhom6_MinhAn.pkt")
+EXT_PKT = os.path.join(ROOT, "CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt")
 
 ENABLE_PW = "MinhAn@Enable26"
 ADMIN_USER = "admin"

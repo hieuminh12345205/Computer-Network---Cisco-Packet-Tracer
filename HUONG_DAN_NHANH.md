@@ -12,8 +12,8 @@ Không cần hiểu hết ngay. Cứ bấm theo, phần giải thích nằm ở 
 | Cái gì | Giá trị |
 |---|---|
 | Phần mềm | Cisco Packet Tracer **9.0.1** |
-| File chính | `CSE3030_MinhAn.pkt` |
-| File phần mở rộng (ACL) | `CSE3030_MinhAn_MoRong_ACL.pkt` |
+| File chính | `CSE3030_2_Nhom6_MinhAn.pkt` |
+| File phần mở rộng (ACL) | `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt` |
 | Trang web nội bộ | `http://portal.minhan.test` |
 | Máy chủ web + DNS | `172.22.10.5` |
 | Máy in | `172.22.10.6` |
@@ -33,7 +33,7 @@ Không cần hiểu hết ngay. Cứ bấm theo, phần giải thích nằm ở 
 
 **Bước 1:** Mở Packet Tracer.
 
-**Bước 2:** Bấm **File → Open**, chọn file `CSE3030_MinhAn.pkt`.
+**Bước 2:** Bấm **File → Open**, chọn file `CSE3030_2_Nhom6_MinhAn.pkt`.
 
 **Bước 3:** Nhìn góc dưới bên phải màn hình, chắc chắn đang ở chế độ **Realtime** (không phải Simulation).
 
@@ -392,7 +392,7 @@ show ip dhcp binding
 
 Phần này dùng **file khác**.
 
-**Bước 1:** **File → Open** → chọn `CSE3030_MinhAn_MoRong_ACL.pkt`. Làm lại Feature 1 để chờ mạng sẵn sàng.
+**Bước 1:** **File → Open** → chọn `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`. Làm lại Feature 1 để chờ mạng sẵn sàng.
 
 **Bước 2:** Bấm `PC-HV1` → **Web Browser** → `http://portal.minhan.test`.
 
@@ -432,7 +432,7 @@ show access-lists
 
 ## Feature 12: Kiểm tra khoá cổng switch (port-security)
 
-Vẫn dùng file `CSE3030_MinhAn_MoRong_ACL.pkt`.
+Vẫn dùng file `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`.
 
 **Bước 1:** Bấm vào switch `SW-PHONGHOC` → tab **CLI** → đăng nhập như Feature 9 (dấu nhắc sẽ là `SW-PHONGHOC#`).
 
@@ -478,7 +478,7 @@ show port-security interface fa0/1
 | Web báo không tìm thấy trang | Xem DNS trong IP Configuration có đúng `172.22.10.5` không. Thử gõ `http://172.22.10.5`. |
 | Laptop không có Wi-Fi | Nhập lại mật khẩu `MinhAnLab2026!` — nhớ dấu `!` ở cuối. |
 | Vào CLI bị hỏi Username | Đúng rồi đó. Gõ `admin` / `MinhAn@Admin26`. |
-| Ping `172.22.10.5` bị chặn | Bạn đang mở **file ACL**. Trong file ACL bị chặn là **đúng**. Muốn ping được thì mở file `CSE3030_MinhAn.pkt`. |
+| Ping `172.22.10.5` bị chặn | Bạn đang mở **file ACL**. Trong file ACL bị chặn là **đúng**. Muốn ping được thì mở file `CSE3030_2_Nhom6_MinhAn.pkt`. |
 | Lỡ tay sửa lung tung | **Đừng bấm Save.** Đóng file, chọn **No** khi được hỏi lưu, rồi mở lại. |
 
 ---

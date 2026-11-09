@@ -37,8 +37,8 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
 
 | File | Nội dung |
 |---|---|
-| `CSE3030_MinhAn.pkt` | **Phương án cơ bản** — nộp bài chính |
-| `CSE3030_MinhAn_MoRong_ACL.pkt` | **Phần mở rộng** — ACL + port-security |
+| `CSE3030_2_Nhom6_MinhAn.pkt` | **Phương án cơ bản** — nộp bài chính |
+| `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt` | **Phần mở rộng** — ACL + port-security |
 | [`HUONG_DAN_NHANH.md`](HUONG_DAN_NHANH.md) | **Bắt đầu từ đây** — hướng dẫn từng bước dạng Feature / Bước, dễ làm theo |
 | [`HUONG_DAN_SU_DUNG_VA_DEMO.md`](HUONG_DAN_SU_DUNG_VA_DEMO.md) | Hướng dẫn mở file và **kịch bản demo 8 bước** |
 | [`BANG_KIEM_THU.md`](BANG_KIEM_THU.md) | Bảng kiểm thử đầy đủ theo mẫu của đề bài |
@@ -172,13 +172,13 @@ Kèm theo là **port-security** trên ba cổng nối PC của `SW-PHONGHOC` (kh
 Access Point, vì mọi laptop Wi-Fi đều gửi khung qua cổng đó).
 
 Thiết kế, giải thích từng dòng lệnh và bảng kiểm thử riêng: [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
-File mô phỏng: `CSE3030_MinhAn_MoRong_ACL.pkt`.
+File mô phỏng: `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`.
 
 ---
 
 ## 8. Hướng dẫn sử dụng file mô phỏng
 
-1. Mở file `CSE3030_MinhAn.pkt` bằng **Cisco Packet Tracer (v9.0 trở lên)**.
+1. Mở file `CSE3030_2_Nhom6_MinhAn.pkt` bằng **Cisco Packet Tracer (v9.0 trở lên)**.
 2. Đợi 10 - 20 giây (hoặc bấm nút **Fast Forward Time**) để quá trình hội tụ Spanning-Tree, kết nối Wi-Fi và xin cấp phát DHCP hoàn tất (tất cả các đèn chuyển sang màu xanh lá).
 3. Mở bất kỳ PC hoặc Laptop nào, vào thẻ **Desktop > Web Browser**, gõ địa chỉ:
    ```text
@@ -199,8 +199,7 @@ và bảng xử lý sự cố: [`HUONG_DAN_SU_DUNG_VA_DEMO.md`](HUONG_DAN_SU_DUN
 ## 9. Còn lại trước khi nộp
 
 - [ ] Điền mã lớp, số nhóm, tên thành viên và **bảng phân công công việc**.
-- [ ] Đổi tên file `.pkt` theo quy ước của lớp, ví dụ `CSE3030_1_Nhom01_MinhAn.pkt`
-      (đề bài gợi ý mẫu `CSE3030_1_Nhom01_TenDonVi.pkt`; hiện chưa đổi vì chưa có mã lớp và số nhóm).
+- [x] Đổi tên file `.pkt` theo quy ước của lớp (lớp 2, nhóm 6): `CSE3030_2_Nhom6_MinhAn.pkt`.
 - [ ] Chụp bổ sung các phép thử còn trống trong [`BANG_KIEM_THU.md`](BANG_KIEM_THU.md)
       và bảng E1–E8 của [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
 - [ ] Xác nhận phiên bản Packet Tracer giảng viên dùng (bản này lưu bằng 9.0.1.0858).

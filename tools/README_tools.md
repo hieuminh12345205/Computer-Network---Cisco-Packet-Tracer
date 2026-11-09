@@ -27,7 +27,7 @@ Nén bằng zlib **mức 6** để khớp đúng byte với bản do Packet Trac
 ## Kiểm chứng
 
 ```bash
-python3 tools/pkt_codec.py selftest CSE3030_MinhAn.pkt
+python3 tools/pkt_codec.py selftest CSE3030_2_Nhom6_MinhAn.pkt
 ```
 
 Lệnh này giải mã rồi mã hoá lại và so sánh. Với file gốc do Packet Tracer ghi, kết quả mã
