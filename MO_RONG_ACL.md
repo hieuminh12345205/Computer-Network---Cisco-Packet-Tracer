@@ -42,6 +42,8 @@ ip access-list extended PHONGHOC-IN
  permit udp 172.22.20.0 0.0.0.63 host 172.22.10.5 eq domain
  permit tcp 172.22.20.0 0.0.0.63 host 172.22.10.5 eq www
  permit ip 172.22.20.0 0.0.0.63 host 172.22.10.6
+ permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply
+ permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established
  deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31
  permit ip any any
 ```
@@ -71,6 +73,17 @@ ngay khi vừa vào router, trước khi tốn công tra bảng định tuyến.
 **Vì sao không cần ACL cho chiều phản hồi?**
 Vì ACL chỉ áp một chiều `in` trên `G0/1`. Gói phản hồi từ máy chủ đi **ra** cổng `G0/1` nên
 không bị kiểm tra. Nhờ vậy DNS response và dữ liệu HTTP vẫn về được máy trạm bình thường.
+
+**Thế còn lúc Giáo vụ chủ động liên lạc sang Phòng học?**
+Lúc này chiều đi và chiều về đổi chỗ. Gói từ Giáo vụ đi **ra** `G0/1` nên không bị kiểm tra,
+nhưng gói **phản hồi** của máy học viên lại đi **vào** `G0/1` với nguồn `172.22.20.x`, đích
+`172.22.10.x`. ACL mở rộng **không nhớ trạng thái kết nối**, nên nếu không có luật riêng thì
+phản hồi này khớp dòng `deny` và bị huỷ (đây chính là lỗi phép thử E6 ở lần chạy đầu).
+Hai dòng thêm vào trước `deny` xử lý việc đó:
+- `permit icmp ... echo-reply`: chỉ cho **gói trả lời ping** đi qua. Học viên vẫn không tự
+  ping sang Giáo vụ được, vì gói của họ là `echo` (yêu cầu), không phải `echo-reply`.
+- `permit tcp ... established`: chỉ cho gói TCP có cờ ACK hoặc RST, tức là gói thuộc một phiên
+  **đã có sẵn**. Gói mở phiên mới (chỉ có cờ SYN) từ học viên vẫn bị chặn.
 
 **Wildcard mask tính thế nào?**
 `/26` → wildcard `0.0.0.63`. `/27` → wildcard `0.0.0.31`. Wildcard là phần bù của subnet mask:
@@ -113,7 +126,7 @@ Chạy trên `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`, sau khi mạng đã hội 
 | E3 | PC-HV1 | `ping 172.22.10.5` (máy chủ) | Bị chặn — **chỉ mở DNS/HTTP, không mở ICMP** | `Reply from 172.22.20.1: Destination host unreachable` ×4 (router chặn) | [`21_ACL_Ping_MayChu_BiChan`](minh_chung/21_ACL_Ping_MayChu_BiChan.png) |
 | E4 | PC-HV1 | `ping` tới IP hiện tại của PC-GV1 | Bị chặn — **trường hợp bị cấm** | Ping `172.22.10.12`: `Destination host unreachable` ×4 | [`22_ACL_Ping_PC-GV1_BiChan`](minh_chung/22_ACL_Ping_PC-GV1_BiChan.png) |
 | E5 | LT-GV2 (Wi-Fi) | `http://portal.minhan.test` | Mở được — ACL áp theo subnet nên laptop cũng theo luật LAN B | Đạt: LT-GV2 mở được portal qua Wi-Fi | [`30_ACL_Web_Wifi_LT-GV2`](minh_chung/30_ACL_Web_Wifi_LT-GV2.png) |
-| E6 | PC-GV1 | `ping` tới IP hiện tại của PC-HV1 | 4/4 phản hồi — **chiều ngược lại không bị giới hạn** | ❌ **Thất bại**: ping `172.22.20.12` → `Request timed out` ×4. Xem phân tích bên dưới | [`31_ACL_Ping_PC-GV1_PC-HV1_ThatBai`](minh_chung/31_ACL_Ping_PC-GV1_PC-HV1_ThatBai.png) |
+| E6 | PC-GV1 | `ping` tới IP hiện tại của PC-HV1 | 4/4 phản hồi — Giáo vụ **chủ động** liên lạc sang Phòng học được | ❌ **Thất bại**: ping `172.22.20.12` → `Request timed out` ×4. Xem phân tích bên dưới | [`31_ACL_Ping_PC-GV1_PC-HV1_ThatBai`](minh_chung/31_ACL_Ping_PC-GV1_PC-HV1_ThatBai.png) |
 | E7 | R-MA (CLI) | `show access-lists` | Số `match` của từng dòng tăng sau các phép thử trên | Dòng 10: 3, dòng 20: 7, dòng 30: 4, dòng 40: **8** (= 4 gói E3 + 4 gói E4), dòng 50: 10 match | [`23_ACL_ShowAccessLists`](minh_chung/23_ACL_ShowAccessLists.png) |
 | E8 | SW-PHONGHOC (CLI) | `show port-security interface fa0/1` | `Port Security: Enabled`, `Maximum: 1`, `Violation Mode: Restrict` | Enabled, Secure-up, Maximum 1, Restrict, Violation Count 0; `show port-security address` có 3 MAC SecureSticky trên Fa0/1–3 | [`24_PortSecurity_SW-PHONGHOC`](minh_chung/24_PortSecurity_SW-PHONGHOC.png) |
 
@@ -124,10 +137,10 @@ Chạy trên `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`, sau khi mạng đã hội 
 > Nhưng gói *echo reply* của PC-HV1 đi **vào** G0/1 với nguồn `172.22.20.x`, đích `172.22.10.x`,
 > khớp dòng `deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31` nên bị huỷ.
 > Vậy mục tiêu "chiều ngược lại không bị giới hạn" ở mục 2 **chưa đạt**: ACL chặn cả phản hồi.
-> **Cách xử lý đề xuất:** thêm trước dòng `deny` các luật cho phép gói phản hồi, ví dụ
+> **Cách xử lý (đã áp dụng vào file ACL):** thêm trước dòng `deny` các luật cho phép gói phản hồi:
 > `permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply` (cho ping từ Giáo vụ)
 > và `permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established` (cho phiên TCP do Giáo vụ mở).
-> Học viên vẫn không tự mở được kết nối mới sang khu Giáo vụ.
+> Học viên vẫn không tự mở được kết nối mới sang khu Giáo vụ. Ảnh `31` là lần chạy **trước** khi sửa; cần chạy lại E6 sau khi sửa.
 
 Trước khi chụp E7, nên xoá bộ đếm cho số liệu sạch:
 

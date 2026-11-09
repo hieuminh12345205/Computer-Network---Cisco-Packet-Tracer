@@ -433,15 +433,21 @@ ping 172.22.10.5
 show access-lists
 ```
 
-✅ **Đúng là khi:** hiện danh sách **`PHONGHOC-IN`** có **5 dòng** đánh số 10–50 (dòng `remark` chú thích không hiện ở đây). Dòng nào đã có gói đi qua thì cuối dòng có `(N match(es))`, số này tăng sau các lần thử ở trên:
+✅ **Đúng là khi:** hiện danh sách **`PHONGHOC-IN`** có **7 dòng** đánh số 10–70 (dòng `remark` chú thích không hiện ở đây). Dòng nào đã có gói đi qua thì cuối dòng có `(N match(es))`, số này tăng sau các lần thử:
 
 | Số | Luật | Bước nào làm tăng |
 |---|---|---|
 | 10 | `permit udp ... host 172.22.10.5 eq domain` | Bước 2 (hỏi DNS tên portal) |
 | 20 | `permit tcp ... host 172.22.10.5 eq www` | Bước 2 (mở web) |
 | 30 | `permit ip ... host 172.22.10.6` | Bước 3 (ping máy in) |
-| 40 | `deny ip 172.22.20.0 ... 172.22.10.0 ...` | Bước 4 và 5 (bị chặn) |
-| 50 | `permit ip any any` | Gói không đi sang khu A (vd. DHCP tới router) |
+| 40 | `permit icmp ... echo-reply` | Bước 7 (PC-HV1 trả lời ping của PC-GV1) |
+| 50 | `permit tcp ... established` | Khi Giáo vụ mở phiên TCP sang Phòng học |
+| 60 | `deny ip 172.22.20.0 ... 172.22.10.0 ...` | Bước 4 và 5 (bị chặn) |
+| 70 | `permit ip any any` | Gói không đi sang khu A (vd. DHCP tới router) |
+
+**Bước 7 (chiều ngược lại):** Xem IP của `PC-HV1`, rồi từ **`PC-GV1`** ping tới IP đó.
+
+✅ **Đúng là khi:** **có Reply**. Giáo vụ chủ động hỗ trợ được máy học viên, còn học viên thì không tự vào được máy Giáo vụ (Bước 5).
 
 💡 **Hiểu nhanh:** **ACL** giống bảo vệ đứng ở cửa router, cầm danh sách "ai được đi đâu". Học viên khu B được vào **xem web** và **dùng máy in**, nhưng không được chọc vào máy của giáo vụ. Điểm hay để kể khi demo: **web vào được mà ping máy chủ lại bị chặn** → bảo vệ không chỉ nhìn "đi tới nhà nào", mà còn nhìn "đi làm việc gì".
 
