@@ -214,7 +214,7 @@ sự đang xử lý gói, chứ không chỉ nằm trong cấu hình.
 | PC không có IP | Chưa chọn DHCP, hoặc cáp chưa lên | Desktop > IP Configuration > chọn **DHCP**; kiểm tra đầu cáp đã xanh |
 | Mở trang web báo không tìm thấy | Gõ nhầm, hoặc DNS chưa có trong máy trạm | Kiểm tra DNS trong IP Configuration phải là `172.22.10.5`; thử `http://172.22.10.5` để tách lỗi DNS khỏi lỗi HTTP |
 | Laptop không thấy Wi-Fi | Sai khóa, hoặc ngoài vùng phủ | Nhập lại `MinhAnLab2026!` (có dấu `!` ở cuối); kéo laptop lại gần AP |
-| Vào CLI bị hỏi mật khẩu | Đúng như thiết kế, `login local` | Dùng `admin` / `MinhAn@Admin26`, rồi `enable` với `MinhAn@Enable26` |
+| Vào CLI bị hỏi mật khẩu | Đúng như thiết kế, `login local` | Dùng `admin` / `MinhAn@Admin26` (privilege 15, vào thẳng `#`). `MinhAn@Enable26` chỉ cần khi `enable` từ dấu `>` |
 | `ping` tới `172.22.10.5` thất bại | Đang mở **nhầm file mở rộng** | ACL cố ý chặn ICMP tới máy chủ. Mở `CSE3030_2_Nhom6_MinhAn.pkt` nếu muốn demo phương án cơ bản. |
 | Mở file báo lỗi phiên bản | File lưu bằng 9.0.1 | Mở bằng Packet Tracer 9.0.1 trở lên |
 

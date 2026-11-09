@@ -344,13 +344,17 @@ Muốn biết chính xác lý do: bấm vào **ô vuông màu** ở cột Info t
 
 **Bước 4:** Gõ mật khẩu `MinhAn@Admin26` → Enter. *(Gõ mật khẩu sẽ không hiện chữ gì — bình thường, cứ gõ rồi Enter.)*
 
-**Bước 5:** Gõ `enable` → Enter.
+✅ **Đúng là khi:** vào thẳng dấu nhắc **`R-MA#`** (dấu `#`, không phải `>`).
 
-**Bước 6:** Gõ mật khẩu `MinhAn@Enable26` → Enter.
+**Bước 5 (tùy chọn):** Gõ `enable` → Enter. Router **không hỏi mật khẩu** mà vẫn ở `R-MA#`, vì bạn đã ở quyền cao nhất rồi. Bình thường, không phải lỗi.
 
-✅ **Đúng là khi:** dấu nhắc đổi từ `R-MA>` thành **`R-MA#`**.
+💡 **Hiểu nhanh:**
+- `>` là quyền xem thường, `#` là quyền quản trị cao nhất (privilege 15).
+- Tài khoản `admin` được cấu hình `privilege 15`, nên đăng nhập xong là có `#` ngay. Mật khẩu chỉ hỏi **một lần** ở bước đăng nhập.
+- `enable secret` (`MinhAn@Enable26`) vẫn được đặt để dự phòng: tài khoản nào có quyền thấp hơn (dấu `>`) thì phải gõ `enable` + mật khẩu này mới lên được `#`.
+- Có mật khẩu để người lạ không vào sửa cấu hình router được. Hai switch đăng nhập y hệt.
 
-💡 **Hiểu nhanh:** `>` là quyền xem thường, `#` là quyền quản trị cao nhất. Có mật khẩu để người lạ không vào sửa cấu hình router được. Hai switch đăng nhập y hệt.
+🗣️ **Nếu thầy hỏi "sao enable không hỏi mật khẩu?":** *"Tài khoản admin được gán privilege 15 nên vào thẳng chế độ quản trị; enable secret chỉ áp dụng cho tài khoản quyền thấp."*
 
 ---
 

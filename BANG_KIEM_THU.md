@@ -98,7 +98,7 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 | # | Nguồn | Đích / thao tác | Kết quả mong đợi | Kết quả thực tế | Minh chứng |
 |---|---|---|---|---|---|
 | 33 | R-MA | Mở tab CLI | Hiện banner cảnh báo, hỏi username/password | *(cần chụp)* | |
-| 34 | R-MA | Đăng nhập `admin` / `MinhAn@Admin26`, rồi `enable` | Vào được chế độ privileged với `MinhAn@Enable26` | *(cần chụp)* | |
+| 34 | R-MA | Đăng nhập `admin` / `MinhAn@Admin26` | Vào thẳng chế độ privileged `R-MA#` (tài khoản privilege 15); `enable` không hỏi thêm mật khẩu | *(cần chụp)* | |
 | 35 | PC-GV1 | `telnet 172.22.10.2` (quản trị SW-GIAOVU) | Hỏi đăng nhập và vào được bằng tài khoản trên | *(cần chụp)* | |
 
 > Trước khi vá, cả ba thiết bị đều đặt `login` trên đường VTY **nhưng không có mật khẩu**,
