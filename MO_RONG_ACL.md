@@ -1,6 +1,6 @@
 # Phần mở rộng: ACL giới hạn truy cập giữa hai bộ phận
 
-File: **`CSE3030_MinhAn_MoRong_ACL.pkt`**
+File: **`CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`**
 Cấu hình xuất ra: [`R-MA_MoRong_ACL.txt`](R-MA_MoRong_ACL.txt),
 [`SW-PHONGHOC_MoRong_PortSecurity.txt`](SW-PHONGHOC_MoRong_PortSecurity.txt)
 
@@ -42,6 +42,8 @@ ip access-list extended PHONGHOC-IN
  permit udp 172.22.20.0 0.0.0.63 host 172.22.10.5 eq domain
  permit tcp 172.22.20.0 0.0.0.63 host 172.22.10.5 eq www
  permit ip 172.22.20.0 0.0.0.63 host 172.22.10.6
+ permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply
+ permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established
  deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31
  permit ip any any
 ```
@@ -71,6 +73,17 @@ ngay khi vừa vào router, trước khi tốn công tra bảng định tuyến.
 **Vì sao không cần ACL cho chiều phản hồi?**
 Vì ACL chỉ áp một chiều `in` trên `G0/1`. Gói phản hồi từ máy chủ đi **ra** cổng `G0/1` nên
 không bị kiểm tra. Nhờ vậy DNS response và dữ liệu HTTP vẫn về được máy trạm bình thường.
+
+**Thế còn lúc Giáo vụ chủ động liên lạc sang Phòng học?**
+Lúc này chiều đi và chiều về đổi chỗ. Gói từ Giáo vụ đi **ra** `G0/1` nên không bị kiểm tra,
+nhưng gói **phản hồi** của máy học viên lại đi **vào** `G0/1` với nguồn `172.22.20.x`, đích
+`172.22.10.x`. ACL mở rộng **không nhớ trạng thái kết nối**, nên nếu không có luật riêng thì
+phản hồi này khớp dòng `deny` và bị huỷ (đây chính là lỗi phép thử E6 ở lần chạy đầu).
+Hai dòng thêm vào trước `deny` xử lý việc đó:
+- `permit icmp ... echo-reply`: chỉ cho **gói trả lời ping** đi qua. Học viên vẫn không tự
+  ping sang Giáo vụ được, vì gói của họ là `echo` (yêu cầu), không phải `echo-reply`.
+- `permit tcp ... established`: chỉ cho gói TCP có cờ ACK hoặc RST, tức là gói thuộc một phiên
+  **đã có sẵn**. Gói mở phiên mới (chỉ có cờ SYN) từ học viên vẫn bị chặn.
 
 **Wildcard mask tính thế nào?**
 `/26` → wildcard `0.0.0.63`. `/27` → wildcard `0.0.0.31`. Wildcard là phần bù của subnet mask:
@@ -104,26 +117,35 @@ gửi khung qua cổng này, giới hạn một MAC sẽ chặn mất toàn bộ
 
 ## 5. Bảng kiểm thử phần mở rộng
 
-Chạy trên `CSE3030_MinhAn_MoRong_ACL.pkt`, sau khi mạng đã hội tụ.
+Chạy trên `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`, sau khi mạng đã hội tụ.
 
 | # | Nguồn | Đích / thao tác | Kết quả mong đợi | Kết quả thực tế | Minh chứng |
 |---|---|---|---|---|---|
-| E1 | PC-HV1 | `http://portal.minhan.test` | Mở được trang — trường hợp **được phép** | *(cần chụp)* | |
-| E2 | PC-HV1 | `ping 172.22.10.6` (máy in) | 4/4 phản hồi — **được phép** | *(cần chụp)* | |
-| E3 | PC-HV1 | `ping 172.22.10.5` (máy chủ) | Bị chặn — **chỉ mở DNS/HTTP, không mở ICMP** | *(cần chụp)* | |
-| E4 | PC-HV1 | `ping` tới IP hiện tại của PC-GV1 | Bị chặn — **trường hợp bị cấm** | *(cần chụp)* | |
-| E5 | LT-GV2 (Wi-Fi) | `http://portal.minhan.test` | Mở được — ACL áp theo subnet nên laptop cũng theo luật LAN B | *(cần chụp)* | |
-| E6 | PC-GV1 | `ping` tới IP hiện tại của PC-HV1 | 4/4 phản hồi — **chiều ngược lại không bị giới hạn** | *(cần chụp)* | |
-| E7 | R-MA (CLI) | `show access-lists` | Số `match` của từng dòng tăng sau các phép thử trên | *(cần chụp)* | |
-| E8 | SW-PHONGHOC (CLI) | `show port-security interface fa0/1` | `Port Security: Enabled`, `Maximum: 1`, `Violation Mode: Restrict` | *(cần chụp)* | |
+| E1 | PC-HV1 | `http://portal.minhan.test` | Mở được trang — trường hợp **được phép** | Đạt: trang portal hiện đầy đủ | [`19_ACL_Web_DuocPhep`](minh_chung/19_ACL_Web_DuocPhep.png) |
+| E2 | PC-HV1 | `ping 172.22.10.6` (máy in) | 4/4 phản hồi — **được phép** | 3/4 phản hồi, TTL=127; gói đầu mất do ARP | [`20_ACL_Ping_MayIn_DuocPhep`](minh_chung/20_ACL_Ping_MayIn_DuocPhep.png) |
+| E3 | PC-HV1 | `ping 172.22.10.5` (máy chủ) | Bị chặn — **chỉ mở DNS/HTTP, không mở ICMP** | PC-HV1 (`172.22.20.12`): `Reply from 172.22.20.1: Destination host unreachable` ×4 (router chặn) | [`21_ACL_Ping_MayChu_BiChan`](minh_chung/21_ACL_Ping_MayChu_BiChan.png) |
+| E4 | PC-HV1 | `ping` tới IP hiện tại của PC-GV1 | Bị chặn — **trường hợp bị cấm** | Ping PC-GV1 `172.22.10.12`: `Destination host unreachable` ×4 | [`22_ACL_Ping_PC-GV1_BiChan`](minh_chung/22_ACL_Ping_PC-GV1_BiChan.png) |
+| E5 | LT-GV2 (Wi-Fi) | `http://portal.minhan.test` | Mở được — ACL áp theo subnet nên laptop cũng theo luật LAN B | Đạt: LT-GV2 mở được portal qua Wi-Fi | [`30_ACL_Web_Wifi_LT-GV2`](minh_chung/30_ACL_Web_Wifi_LT-GV2.png) |
+| E6 | PC-GV1 | `ping` tới IP hiện tại của PC-HV1 | 4/4 phản hồi — Giáo vụ **chủ động** liên lạc sang Phòng học được | **Lần 1 (ACL 5 dòng): thất bại**, `Request timed out` ×4. **Lần 2 (sau khi sửa, ACL 7 dòng): đạt**, ping `172.22.20.12` 4/4, TTL=127 | [`31_ACL_Ping_PC-GV1_PC-HV1_ThanhCong`](minh_chung/31_ACL_Ping_PC-GV1_PC-HV1_ThanhCong.png) |
+| E7 | R-MA (CLI) | `show access-lists` | Số `match` của từng dòng tăng sau các phép thử trên | Đủ 7 dòng. Sau `clear access-list counters`: dòng 40 `echo-reply` **4 match** (= 4 gói trả lời ở E6), dòng 60 `deny` **8 match** (= 4 gói E3 + 4 gói E4) | [`23_ACL_ShowAccessLists`](minh_chung/23_ACL_ShowAccessLists.png) |
+| E8 | SW-PHONGHOC (CLI) | `show port-security interface fa0/1` | `Port Security: Enabled`, `Maximum: 1`, `Violation Mode: Restrict` | Enabled, Secure-up, Maximum 1, Restrict, Violation Count 0; `show port-security address` có 3 MAC SecureSticky trên Fa0/1–3 | [`24_PortSecurity_SW-PHONGHOC`](minh_chung/24_PortSecurity_SW-PHONGHOC.png) |
 
-Gợi ý chụp minh chứng: đặt tên tiếp nối bộ ảnh hiện có, ví dụ
-`minh_chung/10_ACL_Web_DuocPhep.png`, `11_ACL_Ping_BiChan.png`, `12_ACL_ShowAccessLists.png`.
+> **Phân tích phép thử E6 (thất bại ở lần chạy đầu, đã sửa).**
+> **Hiện tượng:** PC-GV1 ping PC-HV1 nhận `Request timed out`, không phải `Destination host unreachable`.
+> **Nguyên nhân:** ACL mở rộng của IOS là **không trạng thái** (stateless), mỗi gói được xét độc lập.
+> Gói *echo request* từ Giáo vụ đi **ra** cổng G0/1 nên không bị ACL (đặt chiều `in`) kiểm tra, và tới được PC-HV1.
+> Nhưng gói *echo reply* của PC-HV1 đi **vào** G0/1 với nguồn `172.22.20.x`, đích `172.22.10.x`,
+> khớp dòng `deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31` nên bị huỷ.
+> Vậy mục tiêu "chiều ngược lại không bị giới hạn" ở mục 2 **chưa đạt**: ACL chặn cả phản hồi.
+> **Cách xử lý (đã áp dụng vào file ACL):** thêm trước dòng `deny` các luật cho phép gói phản hồi:
+> `permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply` (cho ping từ Giáo vụ)
+> và `permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established` (cho phiên TCP do Giáo vụ mở).
+> Học viên vẫn không tự mở được kết nối mới sang khu Giáo vụ. Chạy lại sau khi sửa: E6 đạt, dòng `echo-reply` có 4 match (ảnh `31` và `23`).
 
 Trước khi chụp E7, nên xoá bộ đếm cho số liệu sạch:
 
 ```
-clear ip access-list counters
+clear access-list counters
 ```
 
 ## 6. Những gì phần mở rộng này **không** làm

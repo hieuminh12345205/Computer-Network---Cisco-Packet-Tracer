@@ -1,7 +1,7 @@
 # Thiết kế mạng trung tâm đào tạo Minh An
 
-**File chính:** `CSE3030_MinhAn.pkt`  
-**File phần mở rộng:** `CSE3030_MinhAn_MoRong_ACL.pkt` (xem [`MO_RONG_ACL.md`](MO_RONG_ACL.md))  
+**File chính:** `CSE3030_2_Nhom6_MinhAn.pkt`  
+**File phần mở rộng:** `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt` (xem [`MO_RONG_ACL.md`](MO_RONG_ACL.md))  
 **Phiên bản đã dùng để mở và kiểm tra:** Cisco Packet Tracer 9.0.1.0858  
 **Ngày thực hiện:** 04/11/2026
 
@@ -13,7 +13,7 @@ Trung tâm Minh An có khoảng 30 người dùng: 8 nhân sự Giáo vụ và 2
 
 Mô hình hoàn thành phần cơ bản: hai subnet nối trực tiếp vào một router, DHCP trên router, DNS và HTTP trên server, Wi-Fi WPA2-PSK/AES, máy in IP tĩnh. Phạm vi chưa gồm Internet, NAT, dự phòng hay định tuyến động. Việc chia subnet tạo hai miền quảng bá; bản thân nó không chặn truy cập giữa hai khu.
 
-Phần mở rộng tự chọn được làm trên **một file riêng** `CSE3030_MinhAn_MoRong_ACL.pkt`, dùng ACL để giới hạn truy cập từ khu Phòng học sang khu Giáo vụ, kèm port-security trên các cổng nối PC của khu Phòng học. Giữ hai file tách nhau vì phương án cơ bản yêu cầu hai LAN liên lạc được, còn phần mở rộng thì cố tình chặn bớt.
+Phần mở rộng tự chọn được làm trên **một file riêng** `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`, dùng ACL để giới hạn truy cập từ khu Phòng học sang khu Giáo vụ, kèm port-security trên các cổng nối PC của khu Phòng học. Giữ hai file tách nhau vì phương án cơ bản yêu cầu hai LAN liên lạc được, còn phần mở rộng thì cố tình chặn bớt.
 
 ## 2. Sơ đồ và danh mục thiết bị
 
@@ -103,7 +103,7 @@ Các kết quả trên là phép thử đại diện đã thực hiện, không 
 
 ## 6. Cách mở và trình bày
 
-1. Mở `CSE3030_MinhAn.pkt` bằng Packet Tracer 9.0.1. Chọn Logical và Realtime. Nếu máy dùng cửa sổ nhỏ, phóng to cửa sổ hoặc Zoom Out để thấy đủ hai khu.
+1. Mở `CSE3030_2_Nhom6_MinhAn.pkt` bằng Packet Tracer 9.0.1. Chọn Logical và Realtime. Nếu máy dùng cửa sổ nhỏ, phóng to cửa sổ hoặc Zoom Out để thấy đủ hai khu.
 2. Chờ các liên kết lên và DHCP hoàn tất. Có thể dùng nút Fast Forward Time. Mở PC > Desktop > IP Configuration để xem IP, mask, gateway và DNS.
 3. Mở Desktop > Web Browser, nhập **http://portal.minhan.test**. Đây là tên miền trong mô hình; mở bằng trình duyệt bên ngoài Packet Tracer sẽ không truy cập server mô phỏng.
 4. Dùng Command Prompt bên trong PC/laptop để chạy `ping 172.22.10.6`, hoặc gửi Simple PDU giữa hai thiết bị. Khi cần ping một PC nhận DHCP, đọc IP hiện tại của máy đó trước.
@@ -113,7 +113,7 @@ Các kết quả trên là phép thử đại diện đã thực hiện, không 
 
 ## 7. Việc nhóm cần bổ sung trước khi nộp
 
-Điền đúng mã lớp, số nhóm, tên thành viên và phân công thực tế. Đổi tên file theo quy tắc của lớp nếu cần. Xác nhận phiên bản Packet Tracer giảng viên dùng; bản này đã kiểm tra trên 9.0.1, chưa xác nhận mở được trên bản cũ hơn. Đây là phương án cơ bản tại một địa điểm; chưa có kết nối Internet thực hay kiểm thử in tài liệu. Phần mở rộng đã được làm trên một bản sao riêng, với bảng phép thử được phép/bị chặn ghi trong [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
+Lớp 2, nhóm 6; file đã đặt tên theo quy ước `CSE3030_2_Nhom6_MinhAn.pkt`. Còn điền tên thành viên và phân công thực tế. Xác nhận phiên bản Packet Tracer giảng viên dùng; bản này đã kiểm tra trên 9.0.1, chưa xác nhận mở được trên bản cũ hơn. Đây là phương án cơ bản tại một địa điểm; chưa có kết nối Internet thực hay kiểm thử in tài liệu. Phần mở rộng đã được làm trên một bản sao riêng, với bảng phép thử được phép/bị chặn ghi trong [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
 
 Mã dựng ban đầu và dữ liệu tạm nằm trong `work/`, không cần nộp. Công cụ đọc/sửa trực tiếp file `.pkt` nằm trong `tools/` (xem [`tools/README_tools.md`](tools/README_tools.md)), cũng không thuộc sản phẩm nộp. File `.pkt` cuối đã được cấu hình và lưu lại bằng Packet Tracer; nên dùng trực tiếp file này cho việc học và chỉnh sửa.
 

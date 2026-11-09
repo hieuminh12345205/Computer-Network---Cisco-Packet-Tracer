@@ -12,8 +12,8 @@ Không cần hiểu hết ngay. Cứ bấm theo, phần giải thích nằm ở 
 | Cái gì | Giá trị |
 |---|---|
 | Phần mềm | Cisco Packet Tracer **9.0.1** |
-| File chính | `CSE3030_MinhAn.pkt` |
-| File phần mở rộng (ACL) | `CSE3030_MinhAn_MoRong_ACL.pkt` |
+| File chính | `CSE3030_2_Nhom6_MinhAn.pkt` |
+| File phần mở rộng (ACL) | `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt` |
 | Trang web nội bộ | `http://portal.minhan.test` |
 | Máy chủ web + DNS | `172.22.10.5` |
 | Máy in | `172.22.10.6` |
@@ -33,7 +33,7 @@ Không cần hiểu hết ngay. Cứ bấm theo, phần giải thích nằm ở 
 
 **Bước 1:** Mở Packet Tracer.
 
-**Bước 2:** Bấm **File → Open**, chọn file `CSE3030_MinhAn.pkt`.
+**Bước 2:** Bấm **File → Open**, chọn file `CSE3030_2_Nhom6_MinhAn.pkt`.
 
 **Bước 3:** Nhìn góc dưới bên phải màn hình, chắc chắn đang ở chế độ **Realtime** (không phải Simulation).
 
@@ -154,15 +154,19 @@ Số của máy in mà thay đổi lung tung thì mọi người không in đư�
 
 ## Feature 3: Kiểm tra hai máy cùng khu nói chuyện được với nhau
 
-**Bước 1:** Làm Feature 2 với `PC-GV2`, ghi lại số IP của nó (ví dụ `172.22.10.12`).
+**Bước 1:** Làm Feature 2 với **cả hai máy** `PC-GV1` và `PC-GV2`, ghi lại IP của từng máy.
+
+> ⚠️ DHCP phát số theo thứ tự máy nào xin trước, nên **mỗi lần mở file số có thể khác**. Ví dụ một lần chạy: PC-GV1 = `172.22.10.12`, PC-GV2 = `172.22.10.10`. Luôn xem số thật, đừng chép số trong tài liệu.
 
 **Bước 2:** Bấm vào `PC-GV1` → tab **Desktop** → **Command Prompt**.
 
-**Bước 3:** Gõ lệnh sau rồi Enter (thay bằng IP bạn vừa ghi):
+**Bước 3:** Gõ `ping` + **IP của PC-GV2** (không phải IP của PC-GV1!) rồi Enter. Ví dụ:
 
 ```
-ping 172.22.10.12
+ping 172.22.10.10
 ```
+
+> ❗ Gõ nhầm IP của chính PC-GV1 thì máy **ping chính nó**, lúc nào cũng thông, nên không chứng minh được gì.
 
 ✅ **Đúng là khi:** hiện 4 dòng `Reply from ...`, dòng cuối ghi **Lost = 0**.
 
@@ -188,7 +192,9 @@ ping 172.22.10.1
 ping 172.22.10.5
 ```
 
-✅ **Đúng là khi:** có 4 dòng `Reply from 172.22.10.5`.
+✅ **Đúng là khi:** có dòng `Reply from 172.22.10.5` với **TTL=127** (bị trừ 1 vì đã đi qua router; ping trong cùng khu thì là 128).
+
+> Lần ping **đầu tiên** sau khi mở file thường có 1 dòng `Request timed out` (Lost = 1). Đó là lúc router đang đi hỏi ARP "máy 172.22.10.5 là ai?", nên gói đầu bị bỏ. Gõ lại lệnh ping lần nữa thì phải ra đủ **4/4 Reply, Lost = 0**. Khi chụp minh chứng, chụp lần thứ hai này.
 
 **Bước 3:** Gõ tiếp lệnh này để xem gói tin đi qua những đâu:
 
@@ -232,11 +238,15 @@ http://portal.minhan.test
 
 ## Feature 6: Laptop kết nối Wi-Fi
 
-**Bước 1:** Bấm vào `LT-GV2` → tab **Desktop** → **PC Wireless**.
+**Bước 1:** Bấm vào `LT-GV2` (hoặc `LT-GV1`, cấu hình giống nhau) → tab **Desktop** → biểu tượng **PC Wireless** (hình cột ăng-ten, hàng 2, ô đầu tiên).
 
-**Bước 2:** Xem tab **Link Information**.
+**Bước 2:** Cửa sổ **Linksys** hiện ra, xem tab **Link Information** (thường mở sẵn).
 
-✅ **Đúng là khi:** thấy đang kết nối tới **`MINHAN-TEACHER`**, có vạch sóng.
+✅ **Đúng là khi:** ghi **"You have successfully connected to the access point"**, hai vạch **Signal Strength** và **Link Quality** xanh đầy.
+
+**Bước 2b:** Bấm nút **More Information**.
+
+✅ **Đúng là khi:** dòng **Wireless Network Name (SSID)** là **`MINHAN-TEACHER`**, bảo mật **WPA2**.
 
 **Bước 3:** Quay lại **Desktop** → **IP Configuration**.
 
@@ -262,7 +272,19 @@ http://portal.minhan.test
 ping 172.22.10.6
 ```
 
-✅ **Đúng là khi:** có 4 dòng `Reply from 172.22.10.6`.
+✅ **Đúng là khi:** có 4 dòng `Reply from 172.22.10.6`, **TTL=127**.
+
+**Bước 3:** Làm lại lệnh ping đó trên `PC-HV1` (khu B, nối dây) và `PC-GV1` (khu A, cùng khu với máy in).
+
+✅ **Đúng là khi:** cả ba máy đều **4/4 Reply, Lost = 0**:
+
+| Ping từ | TTL thấy được | Vì sao |
+|---|---|---|
+| `PC-GV1` (khu A) | **128** | Cùng khu, không đi qua router |
+| `PC-HV1` (khu B) | **127** | Đi qua `R-MA` một lần, bị trừ 1 |
+| `LT-GV2` (Wi-Fi) | **127** | Cũng ở khu B, đi qua router một lần |
+
+Laptop Wi-Fi có thời gian (`time=`) lớn hơn máy cắm dây, vài chục ms. Bình thường, sóng Wi-Fi chậm hơn dây.
 
 💡 **Hiểu nhanh:** máy in nằm ở khu A nhưng laptop khu B vẫn với tới được → máy in đúng là **dùng chung**. Đề bài chỉ cần ping được máy in, **không cần in thật**.
 
@@ -274,7 +296,7 @@ ping 172.22.10.6
 
 **Bước 2:** Trong khung Simulation, bấm **Edit Filters** → chỉ để tích **ICMP** và **ARP**, bỏ tích hết cái khác.
 
-**Bước 3:** Trên thanh công cụ bên phải, chọn biểu tượng **phong bì kín** (Add Simple PDU).
+**Bước 3:** Trên **thanh công cụ thứ hai ở phía trên** (hàng có mũi tên chọn, kính lúp, dấu X xoá), nhìn sang **cuối hàng bên phải**: có 2 hình phong bì. Bấm vào **phong bì kín** (cái thứ nhất, tên *Add Simple PDU*, phím tắt `P`). Cái thứ hai là phong bì mở (*Add Complex PDU*), không dùng.
 
 **Bước 4:** Bấm vào `PC-GV1`, rồi bấm vào `PC-HV3`.
 
@@ -292,7 +314,11 @@ rồi chạy ngược về. Cuối cùng khung bên phải ghi **Successful**.
 
 **Bước 6:** Xong thì bấm lại về **Realtime**.
 
-**Nếu ghi Failed ở lần đầu:** bình thường. Bấm thêm Fast Forward ở chế độ Realtime, rồi thử lại.
+**Nếu ghi Failed ở lần đầu:** bình thường, nhất là khi vừa mở file. Router phải đi hỏi ARP nên gói đầu bị bỏ. Ở bảng PDU dưới cùng, **bấm đúp vào chấm đỏ ở cột Fire** của dòng đó để gửi lại, rồi bấm ▶ Play. Lần hai phải ra **Successful**.
+
+💡 Khi demo trước thầy: mở file xong, ping vài lệnh ở **Realtime** trước cho mạng "quen nhau", rồi mới chuyển sang Simulation.
+
+⚠️ **Gói ping (PDU) nhớ số IP, không nhớ tên máy.** PDU tạo hôm trước tới một PC dùng DHCP có thể chạy nhầm sang máy khác, vì lần mở file sau IP đã đổi chủ. Vì vậy file chỉ lưu sẵn 2 gói tới IP cố định (server `.5`, máy in `.6`). Gói tới PC thì **mỗi lần demo tạo mới**, và xem Event List để chắc gói tới đúng máy đích.
 
 **Thấy phong bì có dấu ❌ đỏ thì sao?** Dấu X nghĩa là **máy đó bỏ gói tin**, thường **không phải lỗi**:
 
@@ -318,13 +344,18 @@ Muốn biết chính xác lý do: bấm vào **ô vuông màu** ở cột Info t
 
 **Bước 4:** Gõ mật khẩu `MinhAn@Admin26` → Enter. *(Gõ mật khẩu sẽ không hiện chữ gì — bình thường, cứ gõ rồi Enter.)*
 
-**Bước 5:** Gõ `enable` → Enter.
+✅ **Đúng là khi:** vào thẳng dấu nhắc **`R-MA#`** (dấu `#`, không phải `>`).
 
-**Bước 6:** Gõ mật khẩu `MinhAn@Enable26` → Enter.
+**Bước 5 (tùy chọn):** Gõ `enable` → Enter. Router **không hỏi mật khẩu** mà vẫn ở `R-MA#`, vì bạn đã ở quyền cao nhất rồi. Bình thường, không phải lỗi.
 
-✅ **Đúng là khi:** dấu nhắc đổi từ `R-MA>` thành **`R-MA#`**.
+💡 **Hiểu nhanh:**
+- `>` là quyền xem thường, `#` là quyền quản trị cao nhất (privilege 15).
+- Tài khoản `admin` được cấu hình `privilege 15`, nên đăng nhập xong là có `#` ngay. Mật khẩu chỉ hỏi **một lần** ở bước đăng nhập.
+- `enable secret` (`MinhAn@Enable26`) vẫn được đặt để dự phòng: tài khoản nào có quyền thấp hơn (dấu `>`) thì phải gõ `enable` + mật khẩu này mới lên được `#`.
+- Có mật khẩu để người lạ không vào sửa cấu hình router được.
+- **Hai switch** dùng cùng tài khoản, nhưng switch 2960 trong Packet Tracer không giữ `privilege 15` cho tài khoản, nên đăng nhập xong sẽ thấy dấu **`>`** (ví dụ `SW-PHONGHOC>`). Gõ `enable` + `MinhAn@Enable26` để lên `#`. Đây chính là chỗ `enable secret` phát huy tác dụng.
 
-💡 **Hiểu nhanh:** `>` là quyền xem thường, `#` là quyền quản trị cao nhất. Có mật khẩu để người lạ không vào sửa cấu hình router được. Hai switch đăng nhập y hệt.
+🗣️ **Nếu thầy hỏi "sao enable không hỏi mật khẩu?":** *"Tài khoản admin được gán privilege 15 nên vào thẳng chế độ quản trị; enable secret chỉ áp dụng cho tài khoản quyền thấp."*
 
 ---
 
@@ -348,6 +379,8 @@ show ip route
 
 ✅ **Đúng là khi:** có 2 dòng bắt đầu bằng chữ **C**: `172.22.10.0/27` và `172.22.20.0/26`.
 
+Cũng sẽ có 2 dòng chữ **L** (*Local*): `172.22.10.1/32` và `172.22.20.1/32`. Đó là chính địa chỉ của router trên từng cổng. Bình thường.
+
 **Bước 3:** Gõ:
 
 ```
@@ -355,6 +388,8 @@ show ip dhcp binding
 ```
 
 ✅ **Đúng là khi:** thấy danh sách các máy đã được cấp IP, **không có hai máy trùng số**.
+
+Với file gốc, khi mọi máy đã nhận IP sẽ có **8 dòng**: 3 dòng `172.22.10.x` (PC-GV1–3) và 5 dòng `172.22.20.x` (PC-HV1–3, LT-GV1–2). Cột *Lease expiration* hiện `--` là cách Packet Tracer hiển thị, không phải lỗi. Cột *Hardware address* là địa chỉ MAC, dùng để đối chiếu IP nào thuộc máy nào.
 
 💡 **Hiểu nhanh:** chữ **C** nghĩa là *Connected* — hai khu cắm thẳng vào router nên router tự biết đường, không cần cài thêm gì.
 
@@ -366,7 +401,7 @@ show ip dhcp binding
 
 Phần này dùng **file khác**.
 
-**Bước 1:** **File → Open** → chọn `CSE3030_MinhAn_MoRong_ACL.pkt`. Làm lại Feature 1 để chờ mạng sẵn sàng.
+**Bước 1:** **File → Open** → chọn `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`. Làm lại Feature 1 để chờ mạng sẵn sàng.
 
 **Bước 2:** Bấm `PC-HV1` → **Web Browser** → `http://portal.minhan.test`.
 
@@ -398,7 +433,21 @@ ping 172.22.10.5
 show access-lists
 ```
 
-✅ **Đúng là khi:** hiện danh sách **`PHONGHOC-IN`** có 6 dòng, cuối mỗi dòng có số **matches** tăng lên sau các lần thử ở trên.
+✅ **Đúng là khi:** hiện danh sách **`PHONGHOC-IN`** có **7 dòng** đánh số 10–70 (dòng `remark` chú thích không hiện ở đây). Dòng nào đã có gói đi qua thì cuối dòng có `(N match(es))`, số này tăng sau các lần thử:
+
+| Số | Luật | Bước nào làm tăng |
+|---|---|---|
+| 10 | `permit udp ... host 172.22.10.5 eq domain` | Bước 2 (hỏi DNS tên portal) |
+| 20 | `permit tcp ... host 172.22.10.5 eq www` | Bước 2 (mở web) |
+| 30 | `permit ip ... host 172.22.10.6` | Bước 3 (ping máy in) |
+| 40 | `permit icmp ... echo-reply` | Bước 7 (PC-HV1 trả lời ping của PC-GV1) |
+| 50 | `permit tcp ... established` | Khi Giáo vụ mở phiên TCP sang Phòng học |
+| 60 | `deny ip 172.22.20.0 ... 172.22.10.0 ...` | Bước 4 và 5 (bị chặn) |
+| 70 | `permit ip any any` | Gói không đi sang khu A (vd. DHCP tới router) |
+
+**Bước 7 (chiều ngược lại):** Xem IP của `PC-HV1`, rồi từ **`PC-GV1`** ping tới IP đó.
+
+✅ **Đúng là khi:** **có Reply**. Giáo vụ chủ động hỗ trợ được máy học viên, còn học viên thì không tự vào được máy Giáo vụ (Bước 5).
 
 💡 **Hiểu nhanh:** **ACL** giống bảo vệ đứng ở cửa router, cầm danh sách "ai được đi đâu". Học viên khu B được vào **xem web** và **dùng máy in**, nhưng không được chọc vào máy của giáo vụ. Điểm hay để kể khi demo: **web vào được mà ping máy chủ lại bị chặn** → bảo vệ không chỉ nhìn "đi tới nhà nào", mà còn nhìn "đi làm việc gì".
 
@@ -406,9 +455,9 @@ show access-lists
 
 ## Feature 12: Kiểm tra khoá cổng switch (port-security)
 
-Vẫn dùng file `CSE3030_MinhAn_MoRong_ACL.pkt`.
+Vẫn dùng file `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`.
 
-**Bước 1:** Bấm vào switch `SW-PHONGHOC` → tab **CLI** → đăng nhập như Feature 9 (dấu nhắc sẽ là `SW-PHONGHOC#`).
+**Bước 1:** Bấm vào switch `SW-PHONGHOC` → tab **CLI** → Enter → đăng nhập `admin` / `MinhAn@Admin26`. Dấu nhắc là **`SW-PHONGHOC>`**, gõ tiếp `enable` → mật khẩu `MinhAn@Enable26` → thành **`SW-PHONGHOC#`**.
 
 **Bước 2:** Gõ:
 
@@ -421,6 +470,14 @@ show port-security interface fa0/1
 - `Maximum MAC Addresses` : **1**
 - `Violation Mode` : **Restrict**
 
+**Bước 3:** Gõ:
+
+```
+show port-security address
+```
+
+✅ **Đúng là khi:** có 3 dòng kiểu **SecureSticky** cho `Fa0/1`, `Fa0/2`, `Fa0/3`. Mỗi dòng là MAC của máy đang cắm ở cổng đó (PC-HV1, PC-HV2, PC-HV3). Switch đã "ghi nhớ" máy nào được phép cắm vào cổng nào.
+
 💡 **Hiểu nhanh:** mỗi ổ cắm mạng ở phòng học chỉ cho **một máy** dùng. Ai rút máy ra cắm thiết bị lạ vào thì bị chặn. Riêng ổ cắm của bộ phát Wi-Fi thì **không khoá**, vì nhiều laptop cùng đi qua ổ đó.
 
 ---
@@ -432,9 +489,10 @@ show port-security interface fa0/1
 **Bước 2:** Bấm **Windows + Shift + S** (Windows) hoặc **Cmd + Shift + 4** (Mac), kéo khung chụp vùng có kết quả.
 
 **Bước 3:** Lưu vào thư mục `minh_chung/`, đặt tên theo số tiếp theo, ví dụ:
-- `10_ACL_Web_DuocPhep.png`
-- `11_ACL_Ping_BiChan.png`
-- `12_ACL_ShowAccessLists.png`
+- `25_Ping_PC-GV1_PC-GV2.png`
+- `26_Tracert_PC-HV1_MayChu.png`
+
+(Ảnh 01–24 đã có sẵn trong thư mục.)
 
 **Bước 4:** Mở file `BANG_KIEM_THU.md`, tìm dòng tương ứng, thay chữ *(cần chụp)* bằng kết quả bạn thấy, và ghi tên file ảnh vào cột Minh chứng.
 
@@ -452,7 +510,7 @@ show port-security interface fa0/1
 | Web báo không tìm thấy trang | Xem DNS trong IP Configuration có đúng `172.22.10.5` không. Thử gõ `http://172.22.10.5`. |
 | Laptop không có Wi-Fi | Nhập lại mật khẩu `MinhAnLab2026!` — nhớ dấu `!` ở cuối. |
 | Vào CLI bị hỏi Username | Đúng rồi đó. Gõ `admin` / `MinhAn@Admin26`. |
-| Ping `172.22.10.5` bị chặn | Bạn đang mở **file ACL**. Trong file ACL bị chặn là **đúng**. Muốn ping được thì mở file `CSE3030_MinhAn.pkt`. |
+| Ping `172.22.10.5` bị chặn | Bạn đang mở **file ACL**. Trong file ACL bị chặn là **đúng**. Muốn ping được thì mở file `CSE3030_2_Nhom6_MinhAn.pkt`. |
 | Lỡ tay sửa lung tung | **Đừng bấm Save.** Đóng file, chọn **No** khi được hỏi lưu, rồi mở lại. |
 
 ---

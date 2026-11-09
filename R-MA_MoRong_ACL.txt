@@ -63,6 +63,8 @@ ip access-list extended PHONGHOC-IN
  permit udp 172.22.20.0 0.0.0.63 host 172.22.10.5 eq domain
  permit tcp 172.22.20.0 0.0.0.63 host 172.22.10.5 eq www
  permit ip 172.22.20.0 0.0.0.63 host 172.22.10.6
+ permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply
+ permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established
  deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31
  permit ip any any
 !
