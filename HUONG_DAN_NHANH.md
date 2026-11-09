@@ -378,6 +378,8 @@ show ip route
 
 ✅ **Đúng là khi:** có 2 dòng bắt đầu bằng chữ **C**: `172.22.10.0/27` và `172.22.20.0/26`.
 
+Cũng sẽ có 2 dòng chữ **L** (*Local*): `172.22.10.1/32` và `172.22.20.1/32`. Đó là chính địa chỉ của router trên từng cổng. Bình thường.
+
 **Bước 3:** Gõ:
 
 ```
@@ -385,6 +387,8 @@ show ip dhcp binding
 ```
 
 ✅ **Đúng là khi:** thấy danh sách các máy đã được cấp IP, **không có hai máy trùng số**.
+
+Với file gốc, khi mọi máy đã nhận IP sẽ có **8 dòng**: 3 dòng `172.22.10.x` (PC-GV1–3) và 5 dòng `172.22.20.x` (PC-HV1–3, LT-GV1–2). Cột *Lease expiration* hiện `--` là cách Packet Tracer hiển thị, không phải lỗi. Cột *Hardware address* là địa chỉ MAC, dùng để đối chiếu IP nào thuộc máy nào.
 
 💡 **Hiểu nhanh:** chữ **C** nghĩa là *Connected* — hai khu cắm thẳng vào router nên router tự biết đường, không cần cài thêm gì.
 
