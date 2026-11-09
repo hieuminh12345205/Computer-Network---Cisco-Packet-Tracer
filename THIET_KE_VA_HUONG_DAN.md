@@ -110,11 +110,3 @@ Các kết quả trên là phép thử đại diện đã thực hiện, không 
 5. Quan sát gói tin: chuyển Simulation, giữ ICMP/ARP trong Edit Filters, tạo Simple PDU, dùng Capture/Forward từng bước. Tuyến PC-GV1 tới PC-HV3 là **PC-GV1 > SW-GIAOVU > R-MA > SW-PHONGHOC > PC-HV3**, phản hồi đi ngược lại. Switch chuyển tiếp khung Ethernet; router xử lý việc chuyển gói giữa hai subnet. Khi chưa biết MAC của gateway hoặc máy đích, ARP diễn ra trước ICMP.
 6. Với web, giải thích thứ tự **DNS > thiết lập TCP > HTTP**. IP DNS thuộc LAN A nên client LAN B cần gateway để hỏi DNS.
 7. Sau khi thay đổi cấu hình IOS bằng CLI, dùng `copy running-config startup-config` trên thiết bị rồi lưu file Packet Tracer bằng Ctrl+S.
-
-## 7. Việc nhóm cần bổ sung trước khi nộp
-
-Lớp 2, nhóm 6; file đã đặt tên theo quy ước `CSE3030_2_Nhom6_MinhAn.pkt`. Còn điền tên thành viên và phân công thực tế. Xác nhận phiên bản Packet Tracer giảng viên dùng; bản này đã kiểm tra trên 9.0.1, chưa xác nhận mở được trên bản cũ hơn. Đây là phương án cơ bản tại một địa điểm; chưa có kết nối Internet thực hay kiểm thử in tài liệu. Phần mở rộng đã được làm trên một bản sao riêng, với bảng phép thử được phép/bị chặn ghi trong [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
-
-Mã dựng ban đầu và dữ liệu tạm nằm trong `work/`, không cần nộp. Công cụ đọc/sửa trực tiếp file `.pkt` nằm trong `tools/` (xem [`tools/README_tools.md`](tools/README_tools.md)), cũng không thuộc sản phẩm nộp. File `.pkt` cuối đã được cấu hình và lưu lại bằng Packet Tracer; nên dùng trực tiếp file này cho việc học và chỉnh sửa.
-
-Thư viện mã hóa/ghi định dạng được dùng để dựng thiết bị nền: [packet-tracer-pkt-format](https://github.com/aacanadaa/packet-tracer-pkt-format). Nội dung thiết kế, kế hoạch địa chỉ và trang web do bản dự án này xây dựng riêng.
