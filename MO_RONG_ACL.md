@@ -130,17 +130,25 @@ Chạy trên `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`, sau khi mạng đã hội 
 | E7 | R-MA (CLI) | `show access-lists` | Số `match` của từng dòng tăng sau các phép thử trên | Đủ 7 dòng. Sau `clear access-list counters`: dòng 40 `echo-reply` **4 match** (= 4 gói trả lời ở E6), dòng 60 `deny` **8 match** (= 4 gói E3 + 4 gói E4) | [`23_ACL_ShowAccessLists`](minh_chung/23_ACL_ShowAccessLists.png) |
 | E8 | SW-PHONGHOC (CLI) | `show port-security interface fa0/1` | `Port Security: Enabled`, `Maximum: 1`, `Violation Mode: Restrict` | Enabled, Secure-up, Maximum 1, Restrict, Violation Count 0; `show port-security address` có 3 MAC SecureSticky trên Fa0/1–3 | [`24_PortSecurity_SW-PHONGHOC`](minh_chung/24_PortSecurity_SW-PHONGHOC.png) |
 
-> **Phân tích phép thử E6 (thất bại ở lần chạy đầu, đã sửa).**
+> **Phân tích phép thử E6 (thất bại ở lần chạy đầu, đã sửa)**
+>
 > **Hiện tượng:** PC-GV1 ping PC-HV1 nhận `Request timed out`, không phải `Destination host unreachable`.
+>
 > **Nguyên nhân:** ACL mở rộng của IOS là **không trạng thái** (stateless), mỗi gói được xét độc lập.
-> Gói *echo request* từ Giáo vụ đi **ra** cổng G0/1 nên không bị ACL (đặt chiều `in`) kiểm tra, và tới được PC-HV1.
-> Nhưng gói *echo reply* của PC-HV1 đi **vào** G0/1 với nguồn `172.22.20.x`, đích `172.22.10.x`,
-> khớp dòng `deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31` nên bị huỷ.
-> Vậy mục tiêu "chiều ngược lại không bị giới hạn" ở mục 2 **chưa đạt**: ACL chặn cả phản hồi.
+>
+> - Gói *echo request* từ Giáo vụ đi **ra** cổng G0/1 nên không bị ACL (đặt chiều `in`) kiểm tra, và tới được PC-HV1.
+> - Nhưng gói *echo reply* của PC-HV1 đi **vào** G0/1 với nguồn `172.22.20.x`, đích `172.22.10.x`,
+>   khớp dòng `deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31` nên bị huỷ.
+> - Vậy mục tiêu "chiều ngược lại không bị giới hạn" ở mục 2 **chưa đạt**: ACL chặn cả phản hồi.
+>
 > **Cách xử lý (đã áp dụng vào file ACL):** thêm trước dòng `deny` các luật cho phép gói phản hồi:
-> `permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply` (cho ping từ Giáo vụ)
-> và `permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established` (cho phiên TCP do Giáo vụ mở).
-> Học viên vẫn không tự mở được kết nối mới sang khu Giáo vụ. Chạy lại sau khi sửa: E6 đạt, dòng `echo-reply` có 4 match (ảnh `31` và `23`).
+>
+> - `permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply` — cho ping từ Giáo vụ.
+> - `permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established` — cho phiên TCP do Giáo vụ mở.
+>
+> Học viên vẫn không tự mở được kết nối mới sang khu Giáo vụ.
+>
+> **Kết quả chạy lại:** E6 đạt, dòng `echo-reply` có 4 match (ảnh `31` và `23`).
 
 Trước khi chụp E7, nên xoá bộ đếm cho số liệu sạch:
 

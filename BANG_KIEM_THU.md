@@ -56,6 +56,7 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 
 > **Nguyên nhân phép thử 16 thất bại ở lần gửi đầu:** khi mạng vừa khởi động hoặc vừa đổi
 > cấu hình Wi-Fi, ARP và DHCP chưa hoàn tất nên Simple PDU đầu tiên báo Failed.
+>
 > **Cách xử lý:** bấm Fast Forward Time cho mạng hội tụ rồi gửi lại. Không kết luận lỗi định
 > tuyến chỉ từ một Simple PDU đầu tiên.
 
