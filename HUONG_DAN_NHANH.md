@@ -483,9 +483,10 @@ show port-security address
 **Bước 2:** Bấm **Windows + Shift + S** (Windows) hoặc **Cmd + Shift + 4** (Mac), kéo khung chụp vùng có kết quả.
 
 **Bước 3:** Lưu vào thư mục `minh_chung/`, đặt tên theo số tiếp theo, ví dụ:
-- `10_ACL_Web_DuocPhep.png`
-- `11_ACL_Ping_BiChan.png`
-- `12_ACL_ShowAccessLists.png`
+- `25_Ping_PC-GV1_PC-GV2.png`
+- `26_Tracert_PC-HV1_MayChu.png`
+
+(Ảnh 01–24 đã có sẵn trong thư mục.)
 
 **Bước 4:** Mở file `BANG_KIEM_THU.md`, tìm dòng tương ứng, thay chữ *(cần chụp)* bằng kết quả bạn thấy, và ghi tên file ảnh vào cột Minh chứng.
 

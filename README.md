@@ -51,7 +51,7 @@ Trung tâm Minh An có quy mô ~30 người dùng được chia thành 2 khu v�
 
 ## 3. Sơ đồ mạng & Danh mục thiết bị
 
-![Sơ đồ mạng tổng thể](minh_chung/09_SoDo_TongThe.png)
+![Sơ đồ mạng tổng thể](minh_chung/01_SoDo_TongThe.png)
 
 ### Sơ đồ nguyên lý (Topology)
 
@@ -139,14 +139,18 @@ Tracer tự sinh trong Physical Workspace không phải một thiết bị mạn
 
 | Thao tác kiểm thử | Mục đích | Minh chứng |
 |---|---|:---:|
-| **DHCP LAN B** | Kiểm tra cấp IP tự động trên PC-HV1 | ![DHCP](minh_chung/05_DHCP_LAN_B.png) |
-| **Web LAN A** | Truy cập `http://portal.minhan.test` từ PC Giáo vụ | ![Web LAN A](minh_chung/01_Web_LAN_A.png) |
-| **Web LAN B (Dây)** | Truy cập Web portal xuyên qua Router từ PC Học viên | ![Web LAN B](minh_chung/06_Web_PC_LAN_B.png) |
-| **Web LAN B (Wi-Fi)**| Truy cập Web portal qua sóng Wi-Fi từ Laptop Giảng viên | ![Web Wifi](minh_chung/03_Web_Wifi_LAN_B.png) |
-| **Ping Máy in** | Laptop Giảng viên ping thành công máy in `172.22.10.6` | ![Ping Máy In](minh_chung/02_Wifi_Ping_MayIn.png) |
-| **Liên lạc 2 LAN** | Gửi Simple PDU giữa PC Giáo vụ và PC Học viên | ![PDU Hai LAN](minh_chung/04_KetNoi_HaiLAN.png) |
-| **Simulation Mode**| Kiểm tra gói tin ICMP di chuyển qua các switch và router | ![Simulation](minh_chung/07_Simulation_ICMP.png) |
-| **Kiểm tra nạp lại** | Mở lại file pkt, kiểm tra dịch vụ duy trì ổn định | ![Load File](minh_chung/08_MoLaiFile_Web_LT1.png) |
+| **DHCP LAN A** | PC-GV1 nhận IP tự động `172.22.10.12/27` | ![DHCP LAN A](minh_chung/02_DHCP_PC-GV1.png) |
+| **DHCP LAN B** | PC-HV1 nhận IP tự động `172.22.20.10/26` | ![DHCP LAN B](minh_chung/04_DHCP_PC-HV1.png) |
+| **Router** | `show ip route` + `show ip dhcp binding`: 8 máy, không trùng IP | ![Router](minh_chung/06_R-MA_Route_DHCPBinding.png) |
+| **Web LAN A** | PC-GV1 mở `http://portal.minhan.test` | ![Web LAN A](minh_chung/08_Web_PC-GV1_TenMien.png) |
+| **Web LAN B (dây)** | PC-HV1 mở portal xuyên qua router | ![Web LAN B (dây)](minh_chung/10_Web_PC-HV1.png) |
+| **Wi-Fi** | LT-GV1 nối SSID `MINHAN-TEACHER`, WPA2 | ![Wi-Fi](minh_chung/12_Wifi_LT-GV1_ThongTin.png) |
+| **Web LAN B (Wi-Fi)** | LT-GV1 mở portal qua Wi-Fi | ![Web LAN B (Wi-Fi)](minh_chung/13_Web_Wifi_LT-GV1.png) |
+| **Máy in** | LT-GV2 (Wi-Fi) ping `172.22.10.6` 4/4 | ![Máy in](minh_chung/16_MayIn_LT-GV2_Wifi.png) |
+| **Simulation** | Gói ICMP PC-GV1 → PC-HV3 đi đúng đường, Successful | ![Simulation](minh_chung/17_Simulation_PC-GV1_PC-HV3.png) |
+| **Bảo vệ thiết bị** | Banner + đăng nhập `admin` trên R-MA | ![Bảo vệ thiết bị](minh_chung/18_R-MA_DangNhap.png) |
+| **ACL (mở rộng)** | `show access-lists`: số match của luật cho phép và luật chặn | ![ACL (mở rộng)](minh_chung/23_ACL_ShowAccessLists.png) |
+| **Port-security (mở rộng)** | SW-PHONGHOC: Enabled, Max 1, Restrict, 3 MAC sticky | ![Port-security (mở rộng)](minh_chung/24_PortSecurity_SW-PHONGHOC.png) |
 
 Bảng trên là các phép thử **đã có minh chứng ảnh**. Bảng kiểm thử đầy đủ theo đúng mẫu của
 đề bài — gồm cả cột *nguồn, đích, thao tác, kết quả mong đợi, kết quả thực tế, minh chứng*,
