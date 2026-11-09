@@ -29,7 +29,7 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 | 7 | LT-GV1 | Như trên (qua Wi-Fi) | IP dải LAN B, DNS `172.22.10.5` | Nhận `172.22.20.12`, DNS `172.22.10.5`, qua SSID `MINHAN-TEACHER` | [`12_Wifi_LT-GV1_ThongTin`](minh_chung/12_Wifi_LT-GV1_ThongTin.png) |
 | 8 | LT-GV2 | Như trên (qua Wi-Fi) | IP dải LAN B, IP khác LT-GV1 | Có IP riêng trong dải LAN B, khác LT-GV1 (theo bảng binding) | [`06_R-MA_Route_DHCPBinding`](minh_chung/06_R-MA_Route_DHCPBinding.png) |
 | 9 | R-MA (CLI) | `show ip dhcp binding` | Liệt kê đủ 8 máy, **không có IP trùng nhau** | 8 dòng: 3 IP `172.22.10.10–.12` và 5 IP `172.22.20.10–.14`, **không trùng** | [`06_R-MA_Route_DHCPBinding`](minh_chung/06_R-MA_Route_DHCPBinding.png) |
-| 10 | R-MA (CLI) | `show ip dhcp pool` | Hai pool `GIAOVU`, `PHONGHOC`; số địa chỉ đã cấp khớp số máy | *(cần chụp)* | |
+| 10 | R-MA (CLI) | `show ip dhcp pool` | Hai pool `GIAOVU`, `PHONGHOC`; số địa chỉ đã cấp khớp số máy | `GIAOVU`: 3 leased / 30; `PHONGHOC`: 5 leased / 62 → khớp 3 PC LAN A và 3 PC + 2 laptop LAN B | [`28_R-MA_DHCPPool`](minh_chung/28_R-MA_DHCPPool.png) |
 
 > Phép thử 9 là cách gọn nhất để chứng minh "không trùng IP" mà đề bài yêu cầu, thay vì mở
 > lần lượt từng máy.
@@ -38,10 +38,10 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 
 | # | Nguồn | Đích / thao tác | Kết quả mong đợi | Kết quả thực tế | Minh chứng |
 |---|---|---|---|---|---|
-| 11 | PC-GV1 | `ping 172.22.10.1` (gateway LAN A) | 4/4 phản hồi | 4/4 phản hồi, TTL=255 (router) | *(cần chụp)* |
-| 12 | PC-GV1 | `ping` tới IP hiện tại của PC-GV2 | 4/4 phản hồi (gói đầu có thể mất do ARP) | 4/4 phản hồi tới PC-GV2 `172.22.10.10`, TTL=128 | *(cần chụp)* |
-| 13 | PC-HV1 | `ping 172.22.20.1` (gateway LAN B) | 4/4 phản hồi | *(cần chụp)* | |
-| 14 | PC-HV1 | `ping` tới IP hiện tại của PC-HV2 | 4/4 phản hồi | *(cần chụp)* | |
+| 11 | PC-GV1 | `ping 172.22.10.1` (gateway LAN A) | 4/4 phản hồi | 4/4, TTL=255 (router) | [`25_Ping_PC-GV1_Gateway_PC-GV2`](minh_chung/25_Ping_PC-GV1_Gateway_PC-GV2.png) |
+| 12 | PC-GV1 | `ping` tới IP hiện tại của PC-GV2 | 4/4 phản hồi (gói đầu có thể mất do ARP) | PC-GV2 lần này là `172.22.10.11`: 4/4, TTL=128 | [`25_Ping_PC-GV1_Gateway_PC-GV2`](minh_chung/25_Ping_PC-GV1_Gateway_PC-GV2.png) |
+| 13 | PC-HV1 | `ping 172.22.20.1` (gateway LAN B) | 4/4 phản hồi | 4/4, TTL=255 | [`26_Ping_PC-HV1_Gateway_PC-HV2_MayChu`](minh_chung/26_Ping_PC-HV1_Gateway_PC-HV2_MayChu.png) |
+| 14 | PC-HV1 | `ping` tới IP hiện tại của PC-HV2 | 4/4 phản hồi | PC-HV2 `172.22.20.10`: 4/4, TTL=128 | [`26_Ping_PC-HV1_Gateway_PC-HV2_MayChu`](minh_chung/26_Ping_PC-HV1_Gateway_PC-HV2_MayChu.png) |
 
 ### A3. Kết nối giữa hai LAN
 
@@ -49,8 +49,8 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 |---|---|---|---|---|---|
 | 15 | PC-HV1 | Simple PDU tới SRV-PORTAL | Successful | Successful | [`17_Simulation_PC-GV1_PC-HV3`](minh_chung/17_Simulation_PC-GV1_PC-HV3.png) |
 | 16 | PC-GV1 | Simple PDU tới PC-HV3 | Successful | Successful; Event List đi qua SW-GIAOVU → R-MA → SW-PHONGHOC → **PC-HV3** và quay về | [`17_Simulation_PC-GV1_PC-HV3`](minh_chung/17_Simulation_PC-GV1_PC-HV3.png) |
-| 17 | PC-HV1 | `ping 172.22.10.5` | 4/4 phản hồi | Đạt; TTL=127 (qua 1 router). Gói đầu mất do ARP | *(cần chụp)* |
-| 18 | PC-HV1 | `tracert 172.22.10.5` | Hiện **2 chặng**: `172.22.20.1` rồi `172.22.10.5` | 2 chặng: `172.22.20.1` → `172.22.10.5` | *(cần chụp)* |
+| 17 | PC-HV1 | `ping 172.22.10.5` | 4/4 phản hồi | Lần 1: 3/4 (gói đầu mất do ARP); lần 2: 4/4. TTL=127 (qua 1 router) | [`26_Ping_PC-HV1_Gateway_PC-HV2_MayChu`](minh_chung/26_Ping_PC-HV1_Gateway_PC-HV2_MayChu.png) |
+| 18 | PC-HV1 | `tracert 172.22.10.5` | Hiện **2 chặng**: `172.22.20.1` rồi `172.22.10.5` | 2 chặng: `172.22.20.1` → `172.22.10.5`, "Trace complete" | [`27_Tracert_NSLookup_PC-HV1`](minh_chung/27_Tracert_NSLookup_PC-HV1.png) |
 | 19 | R-MA (CLI) | `show ip route` | Hai dòng `C` cho `172.22.10.0/27` và `172.22.20.0/26` | 2 dòng `C` đúng như mong đợi, thêm 2 dòng `L` (địa chỉ của chính router) | [`06_R-MA_Route_DHCPBinding`](minh_chung/06_R-MA_Route_DHCPBinding.png) |
 | 20 | R-MA (CLI) | `show ip interface brief` | `G0/0` và `G0/1` đều `up/up`; `G0/2` administratively down | G0/0, G0/1 `up/up`; G0/2 administratively down | [`07_R-MA_InterfaceBrief`](minh_chung/07_R-MA_InterfaceBrief.png) |
 
@@ -66,7 +66,7 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 | 21 | PC-GV1 | Web Browser → `http://portal.minhan.test` | Hiện trang cổng thông tin | Đạt | [`08_Web_PC-GV1_TenMien`](minh_chung/08_Web_PC-GV1_TenMien.png) |
 | 22 | PC-HV1 | Như trên | Hiện đúng trang đó (đi xuyên router) | Đạt | [`10_Web_PC-HV1`](minh_chung/10_Web_PC-HV1.png) |
 | 23 | PC-GV1 | `http://172.22.10.5` | Cùng một trang → tách được lỗi DNS khỏi lỗi HTTP | Đạt (chạy trên PC-GV1): cùng một trang | [`09_Web_PC-GV1_IP`](minh_chung/09_Web_PC-GV1_IP.png) |
-| 24 | PC-HV1 | `nslookup portal.minhan.test` | Trả về `172.22.10.5` | *(cần chụp)* | |
+| 24 | PC-HV1 | `nslookup portal.minhan.test` | Trả về `172.22.10.5` | Server `172.22.10.5`, trả lời `portal.minhan.test` → `172.22.10.5` | [`27_Tracert_NSLookup_PC-HV1`](minh_chung/27_Tracert_NSLookup_PC-HV1.png) |
 
 ### A5. Wi-Fi và máy in
 
@@ -102,7 +102,7 @@ máy nhận DHCP, luôn đọc IP hiện tại của máy đó bằng `ipconfig`
 |---|---|---|---|---|---|
 | 33 | R-MA | Mở tab CLI | Hiện banner cảnh báo, hỏi username/password | Hiện banner `Canh bao: ...`, hỏi Username/Password | [`18_R-MA_DangNhap`](minh_chung/18_R-MA_DangNhap.png) |
 | 34 | R-MA | Đăng nhập `admin` / `MinhAn@Admin26` | Vào thẳng chế độ privileged `R-MA#` (tài khoản privilege 15); `enable` không hỏi thêm mật khẩu | Vào thẳng `R-MA#`; `enable` không hỏi thêm | [`18_R-MA_DangNhap`](minh_chung/18_R-MA_DangNhap.png) |
-| 35 | PC-GV1 | `telnet 172.22.10.2` (quản trị SW-GIAOVU) | Hỏi đăng nhập và vào được bằng tài khoản trên | *(cần chụp)* | |
+| 35 | PC-GV1 | `telnet 172.22.10.2` (quản trị SW-GIAOVU) | Hỏi đăng nhập và vào được bằng tài khoản trên | Kết nối "Open", hiện banner, đăng nhập `admin` vào `SW-GIAOVU>` | [`29_Telnet_PC-GV1_SW-GIAOVU`](minh_chung/29_Telnet_PC-GV1_SW-GIAOVU.png) |
 
 > Trước khi vá, cả ba thiết bị đều đặt `login` trên đường VTY **nhưng không có mật khẩu**,
 > nên mọi phiên telnet đều bị từ chối với thông báo *"Password required, but none set"*.

@@ -112,10 +112,22 @@ Chạy trên `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`, sau khi mạng đã hội 
 | E2 | PC-HV1 | `ping 172.22.10.6` (máy in) | 4/4 phản hồi — **được phép** | 3/4 phản hồi, TTL=127; gói đầu mất do ARP | [`20_ACL_Ping_MayIn_DuocPhep`](minh_chung/20_ACL_Ping_MayIn_DuocPhep.png) |
 | E3 | PC-HV1 | `ping 172.22.10.5` (máy chủ) | Bị chặn — **chỉ mở DNS/HTTP, không mở ICMP** | `Reply from 172.22.20.1: Destination host unreachable` ×4 (router chặn) | [`21_ACL_Ping_MayChu_BiChan`](minh_chung/21_ACL_Ping_MayChu_BiChan.png) |
 | E4 | PC-HV1 | `ping` tới IP hiện tại của PC-GV1 | Bị chặn — **trường hợp bị cấm** | Ping `172.22.10.12`: `Destination host unreachable` ×4 | [`22_ACL_Ping_PC-GV1_BiChan`](minh_chung/22_ACL_Ping_PC-GV1_BiChan.png) |
-| E5 | LT-GV2 (Wi-Fi) | `http://portal.minhan.test` | Mở được — ACL áp theo subnet nên laptop cũng theo luật LAN B | *(cần chụp)* | |
-| E6 | PC-GV1 | `ping` tới IP hiện tại của PC-HV1 | 4/4 phản hồi — **chiều ngược lại không bị giới hạn** | *(cần chụp)* | |
+| E5 | LT-GV2 (Wi-Fi) | `http://portal.minhan.test` | Mở được — ACL áp theo subnet nên laptop cũng theo luật LAN B | Đạt: LT-GV2 mở được portal qua Wi-Fi | [`30_ACL_Web_Wifi_LT-GV2`](minh_chung/30_ACL_Web_Wifi_LT-GV2.png) |
+| E6 | PC-GV1 | `ping` tới IP hiện tại của PC-HV1 | 4/4 phản hồi — **chiều ngược lại không bị giới hạn** | ❌ **Thất bại**: ping `172.22.20.12` → `Request timed out` ×4. Xem phân tích bên dưới | [`31_ACL_Ping_PC-GV1_PC-HV1_ThatBai`](minh_chung/31_ACL_Ping_PC-GV1_PC-HV1_ThatBai.png) |
 | E7 | R-MA (CLI) | `show access-lists` | Số `match` của từng dòng tăng sau các phép thử trên | Dòng 10: 3, dòng 20: 7, dòng 30: 4, dòng 40: **8** (= 4 gói E3 + 4 gói E4), dòng 50: 10 match | [`23_ACL_ShowAccessLists`](minh_chung/23_ACL_ShowAccessLists.png) |
 | E8 | SW-PHONGHOC (CLI) | `show port-security interface fa0/1` | `Port Security: Enabled`, `Maximum: 1`, `Violation Mode: Restrict` | Enabled, Secure-up, Maximum 1, Restrict, Violation Count 0; `show port-security address` có 3 MAC SecureSticky trên Fa0/1–3 | [`24_PortSecurity_SW-PHONGHOC`](minh_chung/24_PortSecurity_SW-PHONGHOC.png) |
+
+> **Phân tích phép thử E6 (thất bại).**
+> **Hiện tượng:** PC-GV1 ping PC-HV1 nhận `Request timed out`, không phải `Destination host unreachable`.
+> **Nguyên nhân:** ACL mở rộng của IOS là **không trạng thái** (stateless), mỗi gói được xét độc lập.
+> Gói *echo request* từ Giáo vụ đi **ra** cổng G0/1 nên không bị ACL (đặt chiều `in`) kiểm tra, và tới được PC-HV1.
+> Nhưng gói *echo reply* của PC-HV1 đi **vào** G0/1 với nguồn `172.22.20.x`, đích `172.22.10.x`,
+> khớp dòng `deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31` nên bị huỷ.
+> Vậy mục tiêu "chiều ngược lại không bị giới hạn" ở mục 2 **chưa đạt**: ACL chặn cả phản hồi.
+> **Cách xử lý đề xuất:** thêm trước dòng `deny` các luật cho phép gói phản hồi, ví dụ
+> `permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply` (cho ping từ Giáo vụ)
+> và `permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established` (cho phiên TCP do Giáo vụ mở).
+> Học viên vẫn không tự mở được kết nối mới sang khu Giáo vụ.
 
 Trước khi chụp E7, nên xoá bộ đếm cho số liệu sạch:
 
