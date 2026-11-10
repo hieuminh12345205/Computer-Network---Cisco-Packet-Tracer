@@ -197,13 +197,3 @@ File mô phỏng: `CSE3030_2_Nhom6_MinhAn_MoRong_ACL.pkt`.
 
 Hướng dẫn đầy đủ kèm **kịch bản demo 8 bước**, câu trả lời cho các câu hỏi giảng viên hay hỏi
 và bảng xử lý sự cố: [`HUONG_DAN_SU_DUNG_VA_DEMO.md`](HUONG_DAN_SU_DUNG_VA_DEMO.md).
-
----
-
-## 9. Còn lại trước khi nộp
-
-- [ ] Điền mã lớp, số nhóm, tên thành viên và **bảng phân công công việc**.
-- [x] Đổi tên file `.pkt` theo quy ước của lớp (lớp 2, nhóm 6): `CSE3030_2_Nhom6_MinhAn.pkt`.
-- [ ] Chụp bổ sung các phép thử còn trống trong [`BANG_KIEM_THU.md`](BANG_KIEM_THU.md)
-      và bảng E1–E8 của [`MO_RONG_ACL.md`](MO_RONG_ACL.md).
-- [ ] Xác nhận phiên bản Packet Tracer giảng viên dùng (bản này lưu bằng 9.0.1.0858).
