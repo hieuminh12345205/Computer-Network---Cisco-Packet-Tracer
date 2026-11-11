@@ -109,6 +109,52 @@ Rất quan trọng. ACL được duyệt **tuần tự từ trên xuống, dừn
 tới và ACL mất tác dụng hoàn toàn, dù `show access-lists` vẫn hiển thị đầy đủ. Đây là lỗi
 phổ biến nhất khi viết ACL.
 
+**Đọc kết quả `show access-lists` thế nào?**
+
+Ví dụ một lần chạy sau khi đã làm các phép thử E1–E6:
+
+```
+R-MA#show access-lists
+Extended IP access list PHONGHOC-IN
+    10 permit udp 172.22.20.0 0.0.0.63 host 172.22.10.5 eq domain (3 match(es))
+    20 permit tcp 172.22.20.0 0.0.0.63 host 172.22.10.5 eq www (7 match(es))
+    30 permit ip 172.22.20.0 0.0.0.63 host 172.22.10.6 (4 match(es))
+    40 permit icmp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 echo-reply (3 match(es))
+    50 permit tcp 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 established
+    60 deny ip 172.22.20.0 0.0.0.63 172.22.10.0 0.0.0.31 (8 match(es))
+    70 permit ip any any (10 match(es))
+```
+
+Ba điều cần nắm trước khi đọc:
+
+- **Mỗi dòng có một số thứ tự** (10, 20, …, 70). IOS tự đánh số cách nhau 10 để sau này
+  có thể chèn dòng mới vào giữa, ví dụ dòng 45.
+- **`match` đếm số gói tin, không đếm số lần gõ lệnh.** Một lệnh `ping` gửi 4 gói nên cộng
+  tối đa 4. Một lần mở trang web tạo ra nhiều gói TCP.
+- **Chỉ đếm gói đi vào `G0/1` từ khu Phòng học**, và mỗi gói chỉ được cộng vào **dòng khớp
+  đầu tiên**. Gói đã khớp dòng 10 thì không được xét tiếp ở dòng 70 nữa.
+
+| Dòng | Nghĩa là | Số match ở ví dụ đến từ đâu |
+|---|---|---|
+| 10 | Cho học viên **hỏi DNS** tới máy chủ (UDP 53) | 3 gói truy vấn tên `portal.minhan.test`, từ các lần mở trang web ở E1, E5 |
+| 20 | Cho học viên **mở web** trên máy chủ (TCP 80) | 7 gói TCP từ trình duyệt gửi đi: bắt tay (SYN, ACK), yêu cầu `GET`, các gói ACK và đóng phiên |
+| 30 | Cho học viên dùng **máy in**, mọi giao thức | 4 gói `echo` của một lệnh ping tới máy in (E2) |
+| 40 | Cho **gói trả lời ping** của học viên đi về Giáo vụ | 3 gói trả lời cho lệnh ping của PC-GV1 ở E6. Ping gửi 4 gói nhưng chỉ đếm 3, thường vì gói đầu bị mất do máy còn đang hỏi ARP (dòng đầu báo `Request timed out`) |
+| 50 | Cho gói TCP thuộc **phiên do Giáo vụ mở** sang Phòng học | Không hiện số = **0 match**. Bình thường: trong các phép thử chưa có phiên TCP nào do Giáo vụ mở sang PC học viên |
+| 60 | **Chặn** mọi thứ khác từ Phòng học sang Giáo vụ | 8 gói = 4 gói ping tới máy chủ (E3) + 4 gói ping tới PC-GV1 (E4). Đây là bằng chứng ACL **thực sự chặn** |
+| 70 | Cho phép mọi lưu lượng **không đi tới khu Giáo vụ** | 10 gói không khớp các dòng trên, ví dụ ping tới gateway `172.22.20.1`, hoặc gói DHCP xin địa chỉ (nguồn `0.0.0.0` nên không thuộc dải `172.22.20.0/26`) |
+
+Số match **phụ thuộc vào những phép thử đã chạy** kể từ lần xóa bộ đếm gần nhất. Vì vậy mỗi
+lần chạy có thể ra số khác. Ví dụ ảnh `23` ghi 4 match ở dòng 40 vì lần đó cả 4 gói ping đều
+có trả lời. Điều quan trọng không phải con số chính xác, mà là:
+
+- dòng **60 có match** → chặn thật;
+- dòng **10, 20, 30 có match** → dịch vụ được phép vẫn chạy;
+- dòng **40 có match** → Giáo vụ vẫn ping được sang Phòng học.
+
+Muốn đếm lại từ đầu thì chạy `clear access-list counters`, làm lại các phép thử, rồi
+`show access-lists`.
+
 **Port-security làm gì và vì sao không áp cho cổng nối AP?**
 Mỗi cổng PC chỉ học một địa chỉ MAC; cắm thêm switch lạ hay đổi máy khác vào sẽ bị từ chối.
 Chọn `violation restrict` thay vì `shutdown` để cổng không tự tắt hẳn khi vi phạm — an toàn
