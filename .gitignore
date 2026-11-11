@@ -7,3 +7,6 @@ __pycache__/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# File zip nộp bài: đóng gói riêng, không lưu trong repo
+*.zip
